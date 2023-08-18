@@ -1,0 +1,101 @@
+openapi: 3.0.0
+info:
+  title: Mi API REST
+  description: API para gestionar usuarios
+  version: 1.0.0
+
+paths:
+  /:
+    get:
+      summary: Obtener información de la API
+      responses:
+        '200':
+          description: OK
+
+  /users:
+    get:
+      summary: Obtener lista de usuarios
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example:
+                page: 1
+                per_page: 10
+                users:
+                  - id: 1
+                    nombre: Ejemplo
+                    apellido: Usuario
+                    email: ejemplo@example.com
+                    # ...
+
+    post:
+      summary: Registrar un usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              nombre: Nuevo
+              apellido: Usuario
+              email: nuevo@example.com
+              clave: contraseña
+              fecha_nacimiento: 2000-01-01
+      responses:
+        '201':
+          description: Usuario registrado exitosamente
+        '500':
+          description: Error al registrar usuario
+
+  /login:
+    post:
+      summary: Iniciar sesión
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              email: ejemplo@example.com
+              clave: contraseña
+      responses:
+        '200':
+          description: Inicio de sesión exitoso
+        '401':
+          description: Credenciales inválidas
+
+  /user/change-password:
+    put:
+      summary: Actualizar clave de usuario autenticado
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              nueva_clave: nueva_contraseña
+      responses:
+        '200':
+          description: Clave actualizada exitosamente
+        '401':
+          description: Token expirado o inválido
+        '500':
+          description: Error al actualizar la clave
+
+  /user/forgot-password:
+    post:
+      summary: Recuperar clave de usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              email: ejemplo@example.com
+      responses:
+        '200':
+          description: Token de recuperación de clave generado
+        '404':
+          description: Correo electrónico no encontrado
+        '500':
+          description: Error en el proceso de recuperación de clave

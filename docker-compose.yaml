@@ -1,0 +1,29 @@
+services:
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: ApiDB
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user_password
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Esto es para inicializar la db de prueba pobladaxd
+    networks:
+      - mi_red
+
+  api:
+    build:
+      context: ./api
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+    environment:
+      - DATABASE=mysql
+    volumes:
+      - ./api:/app  # Monta la carpeta local en el contenedor
+    networks:
+      - mi_red
+
+networks:
+  mi_red:
