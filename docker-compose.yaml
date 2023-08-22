@@ -22,7 +22,7 @@ services:
       - SERVICE=mysql
       - USER=user
       - PASSWORD=user_password
-      - DATABASE-NAME=ApiDB
+      - DATABASE=ApiDB
     volumes:
       - ./api:/app  # Monta la carpeta local en el contenedor
     networks:
