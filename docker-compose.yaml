@@ -19,7 +19,10 @@ services:
     depends_on:
       - mysql
     environment:
-      - DATABASE=mysql
+      - SERVICE=mysql
+      - USER=user
+      - PASSWORD=user_password
+      - DATABASE-NAME=ApiDB
     volumes:
       - ./api:/app  # Monta la carpeta local en el contenedor
     networks:

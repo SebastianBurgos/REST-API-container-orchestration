@@ -8,10 +8,10 @@ app = Flask(__name__)
 
 # Configuración de la base de datos
 db = mysql.connector.connect(
-    host= os.environ.get("DATABASE"),  # Lee el valor de la variable de entorno USUARIO_SERVER,
-    user="user",
-    password="user_password",
-    database="ApiDB"
+    host= os.environ.get("SERVICE"),  # Lee el valor de la variable de entorno USUARIO_SERVER,
+    user=os.environ.get("USER"),
+    password=os.environ.get("PASSWORD"),
+    database=os.environ.get("DATABASE"),
 )
 
 # Clave secreta para la generación y verificación de tokens JWT
@@ -64,7 +64,7 @@ def get_users():
 
 
 # método POST para registrar usuarios
-@app.route('/register', methods=['POST'])  
+@app.route('/users/register', methods=['POST'])  
 def register_user():
     try:
         data = request.get_json()  # Obtener datos del cuerpo de la solicitud JSON
@@ -88,7 +88,7 @@ def register_user():
         return jsonify({"error": "Error al registrar usuario"}), 500
     
 # Método GET para obtener un usuario por su ID
-@app.route('/user/<int:user_id>', methods=['GET'])
+@app.route('/users/<int:user_id>', methods=['GET'])
 def get_user_by_id(user_id):
     try:
         cursor = db.cursor(dictionary=True)
@@ -107,7 +107,7 @@ def get_user_by_id(user_id):
         return jsonify({"error": "Error al obtener el usuario"}), 500
 
 # Método DELETE para eliminar un usuario por su ID
-@app.route('/user/<int:user_id>', methods=['DELETE'])
+@app.route('/users/<int:user_id>', methods=['DELETE'])
 def delete_user_by_id(user_id):
     try:
         cursor = db.cursor()
@@ -123,7 +123,7 @@ def delete_user_by_id(user_id):
         return jsonify({"error": "Error al eliminar el usuario"}), 500
 
 # Método PUT para actualizar un usuario por su ID
-@app.route('/user/<int:user_id>', methods=['PUT'])
+@app.route('/users/<int:user_id>', methods=['PUT'])
 def update_user_by_id(user_id):
     try:
         data = request.get_json()
@@ -147,7 +147,7 @@ def update_user_by_id(user_id):
 
 
 # Método POST para el login de usuario
-@app.route('/login', methods=['POST'])
+@app.route('/users/login', methods=['POST'])
 def login_user():
     try:
         data = request.get_json()
@@ -181,7 +181,7 @@ def login_user():
 #  Para probar este método, debes incluir el token JWT en el encabezado Authorization
 #  de la solicitud con el formato "Bearer token".
 #  Además, envía un JSON en el cuerpo de la solicitud con la nueva clave
-@app.route('/user/change-password', methods=['PUT'])
+@app.route('/users/change-password', methods=['PUT'])
 def change_password():
     try:
         # Obtener el token del encabezado Authorization
@@ -216,7 +216,7 @@ def change_password():
         return jsonify({"error": "Error al actualizar la clave"}), 500
 
 # Método POST para recuperar la clave de un usuario
-@app.route('/user/forgot-password', methods=['POST'])
+@app.route('/users/forgot-password', methods=['POST'])
 def forgot_password():
     try:
         data = request.get_json()
