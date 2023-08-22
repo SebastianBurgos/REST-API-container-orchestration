@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 # Configuración de la base de datos
 db = mysql.connector.connect(
-    host="mysql",
+    host= os.environ.get("DATABASE"),  # Lee el valor de la variable de entorno USUARIO_SERVER,
     user="user",
     password="user_password",
     database="ApiDB"
