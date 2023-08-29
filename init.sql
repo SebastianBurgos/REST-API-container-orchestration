@@ -21,3 +21,4 @@ VALUES
     ('Carlos', 'García', 'carlos@example.com', 'carlos', '1995-09-22'),
     ('Ana', 'Martínez', 'ana@example.com', 'ana', '1992-07-11'),
     ('Luis', 'Rodríguez', 'luis@example.com', 'luis', '1998-04-28');
+    

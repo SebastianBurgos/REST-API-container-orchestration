@@ -7,7 +7,8 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: user_password
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Esto es para inicializar la db de prueba pobladaxd
+      # Esto es para inicializar la db de prueba pobladaxd 
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql 
     networks:
       - mi_red
 
@@ -24,7 +25,8 @@ services:
       - PASSWORD=user_password
       - DATABASE=ApiDB
     volumes:
-      - ./api:/app  # Monta la carpeta local en el contenedor
+      # Monta la carpeta local en el contenedor
+      - ./api:/app
     networks:
       - mi_red
 
