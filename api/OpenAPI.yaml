@@ -1,101 +1,724 @@
 openapi: 3.0.0
 info:
-  title: Mi API REST
-  description: API para gestionar usuarios
+  title: Flask User API
+  description: API for user management
   version: 1.0.0
+
+servers:
+  - url: http://localhost:5000
+    description: Development server
 
 paths:
   /:
     get:
-      summary: Obtener información de la API
+      summary: Get API status
       responses:
         '200':
-          description: OK
-
-  /users:
-    get:
-      summary: Obtener lista de usuarios
-      responses:
-        '200':
-          description: OK
+          description: API status
+          content:
+            text/plain:
+              example: API REST FUNCIONANDO
+              schema:
+                $ref: '#/components/schemas/String'
+        '401':
+          description: Credenciales invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '404':
+          description: List of users
           content:
             application/json:
               example:
                 page: 1
                 per_page: 10
-                users:
-                  - id: 1
-                    nombre: Ejemplo
-                    apellido: Usuario
-                    email: ejemplo@example.com
-                    # ...
+                search_name: Patricia
+                users: {}
+              schema:
+                $ref: '#/components/schemas/Paginado'
+        '406':
+          description: Not Acceptable (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '412':
+          description: El campo nombre es requerido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '415':
+          description: Unsupported Media Type (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '429':
+          description: Too Many Requests (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '500':
+          description: Error al registrar usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
 
-    post:
-      summary: Registrar un usuario
+  /users:
+    get:
+      summary: Get a list of users
+      parameters:
+        - name: page
+          in: query
+          description: "Page number for pagination (default: 1)"
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 1000
+            format: int32
+        - name: per_page
+          in: query
+          description: "Number of items per page (default: 10)"
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 1000
+            format: int32
+        - name: search_name
+          in: query
+          description: "Search filter by name (default: '')"
+          required: false
+          schema:
+            type: string
+            maxLength: 100
+            pattern: ^[A-Za-z0-9]{3,10}$
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              example:
+                page: 1
+                per_page: 10
+                search_name: John
+                users:
+                  schema:
+                    - $ref: '#/components/schemas/Full-User'
+              schema:
+                $ref: '#/components/schemas/Paginado'
+        '401':
+          description: Credenciales invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '404':
+          description: List of users
+          content:
+            application/json:
+              example:
+                page: 1
+                per_page: 10
+                search_name: Patricia
+                users:
+              schema:
+                $ref: '#/components/schemas/Paginado'
+        '406':
+          description: Not Acceptable (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '412':
+          description: El campo nombre es requerido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '415':
+          description: Unsupported Media Type (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '429':
+          description: Too Many Requests (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '500':
+          description: Error al registrar usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+    
+    put:
+      summary: Update logged in user
       requestBody:
         required: true
         content:
           application/json:
-            example:
-              nombre: Nuevo
-              apellido: Usuario
-              email: nuevo@example.com
-              clave: contraseña
-              fecha_nacimiento: 2000-01-01
+            schema:
+              $ref: '#/components/schemas/Full-User'
+      responses:
+        '200':
+          description: Usuario actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '500':
+          description: Error al actualizar el usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '401':
+          description: Credenciales invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '406':
+          description: Not Acceptable (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '415':
+          description: Unsupported Media Type (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '429':
+          description: Too Many Requests (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+    delete:
+      summary: Delete logged in user
+      responses:
+        '200':
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '401':
+          description: Token expirado o invalido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '406':
+          description: Not Acceptable (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '415':
+          description: Unsupported Media Type (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '429':
+          description: Too Many Requests (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP' 
+        '500':
+          description: Error al eliminar el usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP' 
+    
+    patch:
+      summary: Change user's password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nueva_clave:
+                  type: string
+                  maxLength: 100
+                  pattern: ^[A-Za-z0-9]{3,10}$
+              additionalProperties: false
+      responses:
+        '200':
+          description: Password changed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '401':
+          description: Token expirado o invalido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '406':
+          description: Not Acceptable (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '415':
+          description: Unsupported Media Type (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '429':
+          description: Too Many Requests (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '500':
+          description: Error al actualizar la clave
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+
+  /users/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Full-User'
       responses:
         '201':
           description: Usuario registrado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '401':
+          description: Credenciales invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '406':
+          description: Not Acceptable (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '412':
+          description: El campo nombre es requerido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '415':
+          description: Unsupported Media Type (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '429':
+          description: Too Many Requests (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
         '500':
           description: Error al registrar usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
 
-  /login:
-    post:
-      summary: Iniciar sesión
-      requestBody:
-        required: true
-        content:
-          application/json:
-            example:
-              email: ejemplo@example.com
-              clave: contraseña
+  /users/{user_id}:
+    get:
+      summary: Get user by ID
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: ID of the user to retrieve
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 1000
+            format: int32
       responses:
         '200':
-          description: Inicio de sesión exitoso
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Full-User'
         '401':
-          description: Credenciales inválidas
-
-  /user/change-password:
-    put:
-      summary: Actualizar clave de usuario autenticado
-      security:
-        - BearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            example:
-              nueva_clave: nueva_contraseña
-      responses:
-        '200':
-          description: Clave actualizada exitosamente
-        '401':
-          description: Token expirado o inválido
+          description: Credenciales invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '406':
+          description: Not Acceptable (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '415':
+          description: Unsupported Media Type (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '429':
+          description: Too Many Requests (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
         '500':
-          description: Error al actualizar la clave
+          description: Error al obtener el usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
 
-  /user/forgot-password:
+  /tokens:
     post:
-      summary: Recuperar clave de usuario
+      summary: User login
       requestBody:
         required: true
         content:
           application/json:
-            example:
-              email: ejemplo@example.com
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  maxLength: 100
+                  pattern: ^[A-Za-z0-9]{3,10}$
+                clave:
+                  type: string
+                  maxLength: 100
+                  pattern: ^[A-Za-z0-9]{3,10}$
+              additionalProperties: false
       responses:
         '200':
-          description: Token de recuperación de clave generado
+          description: JWT token generated successfully
+          content:
+            application/json:
+              example:
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          description: Credenciales invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '406':
+          description: Not Acceptable (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '415':
+          description: Unsupported Media Type (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '429':
+          description: Too Many Requests (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '500':
+          description: Error en el proceso de login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+
+  /tokens/token-password:
+    post:
+      summary: Forgot user's password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  maxLength: 50
+                  pattern: ^[A-Za-z0-9]{3,10}$
+              additionalProperties: false
+      responses:
+        '200':
+          description: Password reset token generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
         '404':
           description: Correo electrónico no encontrado
-        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '406':
+          description: Not Acceptable (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '415':
+          description: Unsupported Media Type (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '429':
+          description: Too Many Requests (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '504':
           description: Error en el proceso de recuperación de clave
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+      bearerAuth:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+  schemas:
+    Full-User:
+      type: object
+      properties:
+        nombre:
+          type: string
+          maxLength: 100
+          pattern: ^[A-Za-z0-9]{3,10}$
+        apellido:
+          type: string
+          maxLength: 100
+          pattern: ^[A-Za-z0-9]{3,10}$
+        email:
+          type: string
+          maxLength: 100
+          pattern: ^[A-Za-z0-9]{3,10}$
+        clave:
+          type: string
+          maxLength: 100
+          pattern: ^[A-Za-z0-9]{3,10}$
+        fecha_nacimiento:
+          type: string
+          maxLength: 10
+          format: date
+          example: '1990-01-01'
+      additionalProperties: false
+    String:
+      type: string
+      maxLength: 1000
+      pattern: ^[A-Za-z0-9ÁÉÍÓÚáéíóúÜüÑñ\s]{3,10}$
+      additionalProperties: false  
+    CodigoHTTP:
+      type: object
+      additionalProperties: false
+    Paginado:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 0
+          maximum: 1000
+          format: int32
+        per_page:
+          type: integer
+          minimum: 0
+          maximum: 1000
+          format: int32
+        search_name:
+          type: string
+          maxLength: 1000
+          pattern: ^[A-Za-z0-9ÁÉÍÓÚáéíóúÜüÑñ\s]{3,10}$
+        users:
+          type: object
+          properties:
+            schema:
+              $ref: "#/components/schemas/Full-User"
+          additionalProperties: false
+      additionalProperties: false
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+          maxLength: 10000
+          pattern: ^[A-Za-z0-9]{3,10}$
+      additionalProperties: false
+
+

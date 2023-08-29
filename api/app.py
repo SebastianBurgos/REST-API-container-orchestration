@@ -26,13 +26,14 @@ def index():
 # Metodo GET para obtener la lista de usuarios
 # Para probar la paginación, puedes acceder a la URL /users y agregar 
 # los parámetros page y per_page a la URL, por ejemplo: 
-# /users?page=1&per_page=10 
+# /users?page=1&per_page=10 y opcionalmente &search_name=Sebas
 @app.route('/users', methods=['GET'])
 def get_users():
     try:
         # Obtener los parámetros de paginación de la URL (opcional)
         page = int(request.args.get('page', 1))
         per_page = int(request.args.get('per_page', 10))
+        search_name = request.args.get('search_name', '')
 
         # Calcular el índice de inicio y final para la paginación
         start_index = (page - 1) * per_page
@@ -42,8 +43,8 @@ def get_users():
         cursor = db.cursor(dictionary=True)
 
         # Consulta SQL para obtener una página de usuarios
-        query = "SELECT * FROM Usuario LIMIT %s, %s"
-        cursor.execute(query, (start_index, per_page))
+        query = "SELECT * FROM Usuario WHERE nombre LIKE %s LIMIT %s, %s"
+        cursor.execute(query, (f"%{search_name}%", start_index, per_page))
 
         # Obtener los resultados y cerrar el cursor
         users = cursor.fetchall()
@@ -53,21 +54,32 @@ def get_users():
         response = {
             "page": page,
             "per_page": per_page,
+            "search_name": search_name,
             "users": users
         }
 
-        return jsonify(response), 200
+        if any(users):
+            return jsonify(response), 200
+        else:
+            return jsonify(response), 404
 
     except mysql.connector.Error as err:
         print("Error:", err)
         return jsonify({"error": "Error al obtener usuarios"}), 500
 
 
-# método POST para registrar usuarios
+# Método POST para registrar usuarios
 @app.route('/users/register', methods=['POST'])  
 def register_user():
     try:
         data = request.get_json()  # Obtener datos del cuerpo de la solicitud JSON
+
+        # Verificar si todos los campos requeridos están presentes en los datos
+        required_fields = ['nombre', 'apellido', 'email', 'clave', 'fecha_nacimiento']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({"error": f"El campo '{field}' es requerido"}), 400
+
         nombre = data.get('nombre')
         apellido = data.get('apellido')
         email = data.get('email')
@@ -107,47 +119,87 @@ def get_user_by_id(user_id):
         return jsonify({"error": "Error al obtener el usuario"}), 500
 
 # Método DELETE para eliminar un usuario por su ID
-@app.route('/users/<int:user_id>', methods=['DELETE'])
-def delete_user_by_id(user_id):
+@app.route('/users', methods=['DELETE'])
+def delete_user_by_id():
     try:
+        # Obtener el token del encabezado Authorization
+        auth_header = request.headers.get('Authorization')
+        if auth_header is None:
+            return jsonify({"error": "Token de autorización faltante"}), 401
+        
+        token = auth_header.split(' ')[1]  # Eliminar la palabra "Bearer" del token
+        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+
+        # Obtener el ID del usuario autenticado
+        user_id = payload.get('user_id')
+
         cursor = db.cursor()
-        query = "DELETE FROM Usuario WHERE id = %s"
-        cursor.execute(query, (user_id,))
+        query_delete = "DELETE FROM Usuario WHERE id = %s"
+        cursor.execute(query_delete, (user_id,))
         db.commit()
         cursor.close()
 
         return jsonify({"message": "Usuario eliminado exitosamente"}), 200
-
+    
     except mysql.connector.Error as err:
         print("Error:", err)
         return jsonify({"error": "Error al eliminar el usuario"}), 500
+    except jwt.ExpiredSignatureError:
+        return jsonify({"error": "Token expirado"}), 401
+    except (jwt.DecodeError, jwt.InvalidTokenError):
+        return jsonify({"error": "Token inválido"}), 401
 
 # Método PUT para actualizar un usuario por su ID
-@app.route('/users/<int:user_id>', methods=['PUT'])
-def update_user_by_id(user_id):
+@app.route('/users', methods=['PUT'])
+def update_user_by_id():
     try:
-        data = request.get_json()
-        nombre = data.get('nombre')
-        apellido = data.get('apellido')
-        email = data.get('email')
-        fecha_nacimiento = data.get('fecha_nacimiento')
+        # Obtener el token del encabezado Authorization
+        auth_header = request.headers.get('Authorization')
 
-        cursor = db.cursor()
-        query = "UPDATE Usuario SET nombre = %s, apellido = %s, email = %s, fecha_nacimiento = %s WHERE id = %s"
-        values = (nombre, apellido, email, fecha_nacimiento, user_id)
-        cursor.execute(query, values)
-        db.commit()
+        if auth_header is None:
+            return jsonify({"error": "Token de autorización faltante"}), 401
+        cursor = db.cursor(dictionary=True)
+        
+        token = auth_header.split(' ')[1]  # Eliminar la palabra "Bearer" del token
+        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+
+        # Obtener el ID del usuario autenticado
+        user_id = payload.get('user_id')
+
+        query_check = "SELECT id FROM Usuario WHERE id = %s"
+        cursor.execute(query_check, (user_id,))
+        existing_user = cursor.fetchone()
         cursor.close()
 
-        return jsonify({"message": "Usuario actualizado exitosamente"}), 200
+        if existing_user:
+            data = request.get_json()
+            nombre = data.get('nombre')
+            apellido = data.get('apellido')
+            email = data.get('email')
+            fecha_nacimiento = data.get('fecha_nacimiento')
+
+            cursor = db.cursor()
+            query_update = "UPDATE Usuario SET nombre = %s, apellido = %s, email = %s, fecha_nacimiento = %s WHERE id = %s"
+            values = (nombre, apellido, email, fecha_nacimiento, user_id)
+            cursor.execute(query_update, values)
+            db.commit()
+            cursor.close()
+
+            return jsonify({"message": "Usuario actualizado exitosamente"}), 200
+        else:
+            return jsonify({"message": "Usuario no encontrado"}), 404
 
     except mysql.connector.Error as err:
         print("Error:", err)
         return jsonify({"error": "Error al actualizar el usuario"}), 500
+    except jwt.ExpiredSignatureError:
+        return jsonify({"error": "Token expirado"}), 401
+    except (jwt.DecodeError, jwt.InvalidTokenError):
+        return jsonify({"error": "Token inválido"}), 401
 
 
 # Método POST para el login de usuario
-@app.route('/users/login', methods=['POST'])
+@app.route('/tokens', methods=['POST'])
 def login_user():
     try:
         data = request.get_json()
@@ -163,10 +215,10 @@ def login_user():
         cursor.close()
 
         if user:
-            # Generar token JWT con una duración de 24 horas
+            # Generar token JWT con una duración de 30 minutos
             payload = {
                 'user_id': user['id'],
-                'exp': datetime.utcnow() + timedelta(hours=24)
+                'exp': datetime.utcnow() + timedelta(minutes=30)
             }
             token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
             return jsonify({"token": token}), 200
@@ -177,11 +229,11 @@ def login_user():
         print("Error:", err)
         return jsonify({"error": "Error en el proceso de login"}), 500
 
-# Método PUT para actualizar la clave del usuario autenticado
+# Método PATCH para actualizar la clave del usuario autenticado
 #  Para probar este método, debes incluir el token JWT en el encabezado Authorization
 #  de la solicitud con el formato "Bearer token".
 #  Además, envía un JSON en el cuerpo de la solicitud con la nueva clave
-@app.route('/users/change-password', methods=['PUT'])
+@app.route('/users/<int:user_id>/new-password', methods=['PATCH'])
 def change_password():
     try:
         # Obtener el token del encabezado Authorization
@@ -216,7 +268,7 @@ def change_password():
         return jsonify({"error": "Error al actualizar la clave"}), 500
 
 # Método POST para recuperar la clave de un usuario
-@app.route('/users/forgot-password', methods=['POST'])
+@app.route('/tokens/token-password', methods=['POST'])
 def forgot_password():
     try:
         data = request.get_json()
