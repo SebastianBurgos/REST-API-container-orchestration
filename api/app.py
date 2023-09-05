@@ -61,7 +61,7 @@ def get_users():
         if any(users):
             return jsonify(response), 200
         else:
-            return jsonify(response), 404
+            return jsonify({"error":"Error al obtener usuarios"}), 404
 
     except mysql.connector.Error as err:
         print("Error:", err)
@@ -77,7 +77,7 @@ def register_user():
         # Verificar si todos los campos requeridos están presentes en los datos
         required_fields = ['nombre', 'apellido', 'email', 'clave', 'fecha_nacimiento']
         for field in required_fields:
-            if field not in data:
+            if field not in data or not data[field]:
                 return jsonify({"error": f"El campo '{field}' es requerido"}), 400
 
         nombre = data.get('nombre')
@@ -163,32 +163,41 @@ def update_user_by_id():
         token = auth_header.split(' ')[1]  # Eliminar la palabra "Bearer" del token
         payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
 
-        # Obtener el ID del usuario autenticado
-        user_id = payload.get('user_id')
+        data = request.get_json()
+        nombre = data.get('nombre')
+        apellido = data.get('apellido')
+        email = data.get('email')
+        fecha_nacimiento = data.get('fecha_nacimiento')
 
-        query_check = "SELECT id FROM Usuario WHERE id = %s"
-        cursor.execute(query_check, (user_id,))
-        existing_user = cursor.fetchone()
+        # Construye la consulta SQL y los valores de manera dinámica
+        query_update = "UPDATE Usuario SET "
+        values = []
+        if nombre is not None:
+            query_update += "nombre = %s, "
+            values.append(nombre)
+        if apellido is not None:
+            query_update += "apellido = %s, "
+            values.append(apellido)
+        if email is not None:
+            query_update += "email = %s, "
+            values.append(email)
+        if fecha_nacimiento is not None:
+            query_update += "fecha_nacimiento = %s, "
+            values.append(fecha_nacimiento)
+
+        # Elimina la coma extra al final de la consulta SQL
+        query_update = query_update.rstrip(', ')
+
+        # Agrega la condición WHERE para actualizar el usuario específico
+        query_update += " WHERE id = %s"
+        values.append(payload.get('user_id'))
+
+        # Ejecuta la consulta SQL con los valores
+        cursor.execute(query_update, values)
+        db.commit()
         cursor.close()
 
-        if existing_user:
-            data = request.get_json()
-            nombre = data.get('nombre')
-            apellido = data.get('apellido')
-            email = data.get('email')
-            fecha_nacimiento = data.get('fecha_nacimiento')
-
-            cursor = db.cursor()
-            query_update = "UPDATE Usuario SET nombre = %s, apellido = %s, email = %s, fecha_nacimiento = %s WHERE id = %s"
-            values = (nombre, apellido, email, fecha_nacimiento, user_id)
-            cursor.execute(query_update, values)
-            db.commit()
-            cursor.close()
-
-            return jsonify({"message": "Usuario actualizado exitosamente"}), 200
-        else:
-            return jsonify({"message": "Usuario no encontrado"}), 404
-
+        return jsonify({"message": "Usuario actualizado exitosamente"}), 200
     except mysql.connector.Error as err:
         print("Error:", err)
         return jsonify({"error": "Error al actualizar el usuario"}), 500
@@ -196,7 +205,7 @@ def update_user_by_id():
         return jsonify({"error": "Token expirado"}), 401
     except (jwt.DecodeError, jwt.InvalidTokenError):
         return jsonify({"error": "Token inválido"}), 401
-
+    
 
 # Método POST para el login de usuario
 @app.route('/tokens', methods=['POST'])
