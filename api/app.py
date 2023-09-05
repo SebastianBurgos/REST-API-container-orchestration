@@ -242,7 +242,7 @@ def login_user():
 #  Para probar este método, debes incluir el token JWT en el encabezado Authorization
 #  de la solicitud con el formato "Bearer token".
 #  Además, envía un JSON en el cuerpo de la solicitud con la nueva clave
-@app.route('/users/<int:user_id>/new-password', methods=['PATCH'])
+@app.route('/users/user/new-password', methods=['PATCH'])
 def change_password():
     try:
         # Obtener el token del encabezado Authorization
