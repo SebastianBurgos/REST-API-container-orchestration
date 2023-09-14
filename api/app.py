@@ -1,3 +1,4 @@
+import time
 from flask import Flask, request, jsonify
 import mysql.connector
 import os
@@ -7,12 +8,22 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 
 # Configuración de la base de datos
-db = mysql.connector.connect(
-    host= os.environ.get("SERVICE"),  # Lee el valor de la variable de entorno USUARIO_SERVER,
-    user=os.environ.get("USER"),
-    password=os.environ.get("PASSWORD"),
-    database=os.environ.get("DATABASE"),
-)
+def esperar_db():
+    while True:
+        try:
+            db = mysql.connector.connect(
+                host=os.environ.get("SERVICE"),
+                user=os.environ.get("USER"),
+                password=os.environ.get("PASSWORD"),
+                database=os.environ.get("DATABASE"),
+            )
+            return db
+        except mysql.connector.Error as err:
+            print("Error:", err)
+            print("Reintentando conexión a la base de datos en 5 segundos...")
+            time.sleep(5)
+
+db = esperar_db()
 
 # Clave secreta para la generación y verificación de tokens JWT
 SECRET_KEY = "microchervices"
