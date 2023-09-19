@@ -304,70 +304,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CodigoHTTP' 
-    
-    patch:
-      summary: Change user's password
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                nueva_clave:
-                  type: string
-                  maxLength: 100
-                  pattern: ^[A-Za-z0-9]{3,10}$
-              additionalProperties: false
-      responses:
-        '200':
-          description: Password changed successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '401':
-          description: Token expirado o invalido
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '406':
-          description: Not Acceptable (en-US)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '415':
-          description: Unsupported Media Type (en-US)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '429':
-          description: Too Many Requests (en-US)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '500':
-          description: Error al actualizar la clave
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
 
   /users/register:
     post:
@@ -503,6 +439,71 @@ paths:
               schema:
                 $ref: '#/components/schemas/CodigoHTTP'
 
+  /users/user/new-password:
+    patch:
+      summary: Change user's password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nueva_clave:
+                  type: string
+                  maxLength: 100
+                  pattern: ^[A-Za-z0-9]{3,10}$
+              additionalProperties: false
+      responses:
+        '200':
+          description: Password changed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '401':
+          description: Token expirado o invalido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '406':
+          description: Not Acceptable (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '415':
+          description: Unsupported Media Type (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '429':
+          description: Too Many Requests (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '500':
+          description: Error al actualizar la clave
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+  
   /tokens:
     post:
       summary: User login
@@ -656,69 +657,14 @@ components:
         bearerFormat: JWT
   schemas:
     Full-User:
-      type: object
-      properties:
-        nombre:
-          type: string
-          maxLength: 100
-          pattern: ^[A-Za-z0-9]{3,10}$
-        apellido:
-          type: string
-          maxLength: 100
-          pattern: ^[A-Za-z0-9]{3,10}$
-        email:
-          type: string
-          maxLength: 100
-          pattern: ^[A-Za-z0-9]{3,10}$
-        clave:
-          type: string
-          maxLength: 100
-          pattern: ^[A-Za-z0-9]{3,10}$
-        fecha_nacimiento:
-          type: string
-          maxLength: 10
-          format: date
-          example: '1990-01-01'
-      additionalProperties: false
+      $ref: './schemas/Full-User.json'
     String:
-      type: string
-      maxLength: 1000
-      pattern: ^[A-Za-z0-9ÁÉÍÓÚáéíóúÜüÑñ\s]{3,10}$
-      additionalProperties: false  
+      $ref: './schemas/String.json'
     CodigoHTTP:
-      type: object
-      additionalProperties: false
+      $ref: './schemas/Codigo-HTTP.json'
     Paginado:
-      type: object
-      properties:
-        page:
-          type: integer
-          minimum: 0
-          maximum: 1000
-          format: int32
-        per_page:
-          type: integer
-          minimum: 0
-          maximum: 1000
-          format: int32
-        search_name:
-          type: string
-          maxLength: 1000
-          pattern: ^[A-Za-z0-9ÁÉÍÓÚáéíóúÜüÑñ\s]{3,10}$
-        users:
-          type: object
-          properties:
-            schema:
-              $ref: "#/components/schemas/Full-User"
-          additionalProperties: false
-      additionalProperties: false
+      $ref: './schemas/Paginado.json'
     Token:
-      type: object
-      properties:
-        token:
-          type: string
-          maxLength: 10000
-          pattern: ^[A-Za-z0-9]{3,10}$
-      additionalProperties: false
+      $ref: './schemas/Token.json'
 
 

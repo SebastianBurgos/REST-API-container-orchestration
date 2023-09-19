@@ -4,6 +4,7 @@ import mysql.connector
 import os
 import jwt
 from datetime import datetime, timedelta
+from insertions import data
 
 app = Flask(__name__)
 
@@ -24,6 +25,20 @@ def esperar_db():
             time.sleep(5)
 
 db = esperar_db()
+
+# Insertar datos falsos en la base de datos
+def insertFakeData():
+    try:
+        cursor = db.cursor()
+        print("Insertando datos falsos en la base de datos...")
+        cursor.executemany("""INSERT INTO Usuario (nombre, apellido, email, clave, fecha_nacimiento) 
+                            VALUES (%(nombre)s, %(apellido)s, %(email)s, %(clave)s, %(fecha_nacimiento)s)""", data)
+        db.commit()
+        cursor.close()
+    except mysql.connector.Error as err:
+        print("Error:", err)
+
+insertFakeData()
 
 # Clave secreta para la generación y verificación de tokens JWT
 SECRET_KEY = "microchervices"
