@@ -364,5 +364,6 @@ def forgot_password():
         return jsonify({"error": "Error en el proceso de recuperación de clave"}), 500
 
 
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
