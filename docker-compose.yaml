@@ -11,6 +11,26 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql 
     networks:
       - mi_red
+  
+  rabbitmq:
+    image: rabbitmq:3.8
+    ports:
+      - "5672:5672"
+    networks:
+      - mi_red
+
+  consumidor:
+    build:
+      context: ./message-service
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBITMQ_SERVICE: rabbitmq
+    volumes:
+      - ./message-service:/service
+    networks:
+      - mi_red
+    tty: true
 
   api:
     build:
@@ -19,11 +39,14 @@ services:
       - "5000:5000"
     depends_on:
       - mysql
+      - rabbitmq
     environment:
       SERVICE: mysql
       USER: root
       PASSWORD: root_password
       DATABASE: ApiDB
+      RABBITMQ_SERVICE: rabbitmq
+      SERVICE_NAME: api
     volumes:
       # Monta la carpeta local en el contenedor
       - ./api:/app

@@ -1,7 +1,7 @@
-#PRODUCTOR O API
+#CONSUMIDOR
 FROM python:3.9-alpine
 
-WORKDIR /app
+WORKDIR /service
 
 COPY requirements.txt requirements.txt
 
@@ -9,4 +9,4 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["python", "app.py"]
+CMD ["python", "message_service.py"]

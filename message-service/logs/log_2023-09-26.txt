@@ -1,0 +1,7 @@
+FROM SERVICE: api
+ACCION: Se ha consultado la lista de usuarios.
+METODO-HTTP: GET.
+RUTA: /users.
+IP: 172.19.0.1
+FECHA: 2023-09-26 23:02:10.288974
+

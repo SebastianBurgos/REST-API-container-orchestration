@@ -1,10 +1,11 @@
 import time
-from flask import Flask, request, jsonify
 import mysql.connector
 import os
 import jwt
+import pika
 from datetime import datetime, timedelta
 from insertions import data
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
@@ -24,7 +25,30 @@ def esperar_db():
             print("Reintentando conexión a la base de datos en 5 segundos...")
             time.sleep(5)
 
+def esperar_rabbitmq():
+    while True:
+        try:
+            connection = pika.BlockingConnection(
+                pika.ConnectionParameters(host=os.environ.get("RABBITMQ_SERVICE"), heartbeat=600)
+            )
+            return connection
+        except pika.exceptions.AMQPConnectionError:
+            print("Reintentando conexión a RabbitMQ en 5 segundos...")
+            time.sleep(5)
+
 db = esperar_db()
+gestormensajes = esperar_rabbitmq()
+channel = gestormensajes.channel()
+nombre_servicio = os.environ.get("SERVICE_NAME")
+
+# Declarar una cola
+channel.queue_declare(queue='autenticaciones')
+
+# Declaramos la función para envio de mensajes
+def enviar_mensaje(mensaje, metodo, ruta, username, fecha):
+    bodymensaje = nombre_servicio+"#"+mensaje+"#"+metodo+"#"+ruta+"#"+username+"#"+fecha
+    channel.basic_publish(exchange='', routing_key='autenticaciones', body=bodymensaje)
+    print(f"Mensaje enviado: Usuario: {username}\nMensaje: {mensaje}")
 
 # Insertar datos falsos en la base de datos
 def insertFakeData():
@@ -83,6 +107,13 @@ def get_users():
             "search_name": search_name,
             "users": users
         }
+        
+        mensaje = "Se ha consultado la lista de usuarios."
+        metodo = "GET."
+        ruta = "/users."
+        username = str(request.remote_addr)
+        fecha = str(datetime.now())
+        enviar_mensaje(mensaje, metodo, ruta, username, fecha)
 
         if any(users):
             return jsonify(response), 200
