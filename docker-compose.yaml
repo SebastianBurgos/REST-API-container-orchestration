@@ -47,6 +47,7 @@ services:
       DATABASE: ApiDB
       RABBITMQ_SERVICE: rabbitmq
       SERVICE_NAME: api
+      SECRET_KEY: microcevichesecretkey@2011
     volumes:
       # Monta la carpeta local en el contenedor
       - ./api:/app
