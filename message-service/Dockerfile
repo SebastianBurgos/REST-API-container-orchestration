@@ -9,4 +9,11 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["python", "message_service.py"]
+# Copia el script de inicio
+COPY start.sh /service/start.sh
+
+# Establece permisos de ejecución para el script
+RUN chmod +x /service/start.sh
+
+# Ejecuta el script de inicio
+CMD ["./start.sh"]

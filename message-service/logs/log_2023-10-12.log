@@ -1,0 +1,20 @@
+TIPO DE LOG: AUTH
+METODO-HTTP: POST.
+RUTA: /users/register.
+MODULO: ROUTES.PY
+FECHA: 2023-10-12 15:11:49.125679
+IP: 172.18.0.1
+USUARIO AUTENTICADO: USUARIO REGISTRADO: Chalome Manrique
+TOKEN: NO TOKEN
+ACCION: UN USUARIO SE HA REGISTRADO.
+
+TIPO DE LOG: AUTH
+METODO-HTTP: POST.
+RUTA: /tokens.
+MODULO: ROUTES.PY
+FECHA: 2023-10-12 15:12:17.257754
+IP: 172.18.0.1
+USUARIO AUTENTICADO: {'id': 116, 'nombre': 'Chalome', 'apellido': 'Manrique', 'email': 'salomanrik@gmail', 'clave': 'rique', 'fecha_nacimiento': datetime.date(2001, 3, 1), 'creado_en': datetime.datetime(2023, 10, 12, 15, 11, 49)}
+TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMTYsImV4cCI6MTY5NzEyNTMzN30.XU-5FBCTOaJRpokBxB1rQ6A5RsyEcHxAQBkZVMre8oI
+ACCION: UN USUARIO SE HA AUTENTICADO.
+
