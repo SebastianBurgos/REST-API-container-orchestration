@@ -49,12 +49,16 @@ def get_users():
             "users": users
         }
         
-        mensaje = "Se ha consultado la lista de usuarios."
+        mensaje = "SE HA CONSULTADO LA LISTA DE USUARIOS."
         metodo = "GET."
         ruta = "/users."
-        username = str(request.remote_addr)
+        ip = str(request.remote_addr)
         fecha = str(datetime.now())
-        enviar_mensaje(mensaje, metodo, ruta, username, fecha)
+        tipo_log = "INFO"
+        modulo = "ROUTES.PY"
+        usuario_autenticado = "GUEST"
+        token = "NO TOKEN"
+        enviar_mensaje(tipo_log, metodo, ruta, modulo, fecha, ip, usuario_autenticado, token, mensaje)
 
         if any(users):
             return jsonify(response), 200
@@ -90,6 +94,17 @@ def register_user():
         cursor.execute(query, values)
         db.commit()
         cursor.close()
+
+        mensaje = "UN USUARIO SE HA REGISTRADO."
+        metodo = "POST."
+        ruta = "/users/register."
+        ip = str(request.remote_addr)
+        fecha = str(datetime.now())
+        tipo_log = "AUTH"
+        modulo = "ROUTES.PY"
+        usuario_autenticado = "USUARIO REGISTRADO: "+nombre+" "+apellido
+        token = "NO TOKEN"
+        enviar_mensaje(tipo_log, metodo, ruta, modulo, fecha, ip, usuario_autenticado, token, mensaje)
 
         return jsonify({"message": "Usuario registrado exitosamente"}), 201
 
@@ -228,6 +243,18 @@ def login_user():
                 'exp': datetime.utcnow() + timedelta(minutes=30)
             }
             token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+
+            mensaje = "UN USUARIO SE HA AUTENTICADO."
+            metodo = "POST."
+            ruta = "/tokens."
+            ip = str(request.remote_addr)
+            fecha = str(datetime.now())
+            tipo_log = "AUTH"
+            modulo = "ROUTES.PY"
+            usuario_autenticado = str(user)
+
+            enviar_mensaje(tipo_log, metodo, ruta, modulo, fecha, ip, usuario_autenticado, token, mensaje)
+
             return jsonify({"token": token,
                             "id_user": user['id']}), 200
         else:

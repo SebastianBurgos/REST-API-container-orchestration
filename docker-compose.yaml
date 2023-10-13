@@ -22,6 +22,8 @@ services:
   consumidor:
     build:
       context: ./message-service
+    ports:
+      - "5005:5005"
     depends_on:
       - rabbitmq
     environment:
