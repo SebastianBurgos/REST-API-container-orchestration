@@ -1,0 +1,63 @@
+{
+	"id": "249a3836-fdd8-48ad-808d-242935acc73a",
+	"values": [
+		{
+			"key": "token-logueado",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "id-loguedin",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "nombre-registered",
+			"value": "Chalome",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "clave-registered",
+			"value": "rique",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "apellido-registered",
+			"value": "Manrique",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "fecha-nacimiento-registered",
+			"value": "2001-03-01",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "email-registered",
+			"value": "salogomela@gmail",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "nombre-nuevo-loguedin",
+			"value": "Etnie",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "clave-nueva-loguedin",
+			"value": "sapito",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2023-09-26T23:14:49.185Z",
+	"_postman_exported_using": "Postman/10.18.9"
+}

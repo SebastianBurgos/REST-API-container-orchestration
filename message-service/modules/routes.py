@@ -1,8 +1,11 @@
 import os
 from api_message import app
 from datetime import datetime
+from modules.rabbitmqservice import enviar_mensaje
 from flask import request, jsonify
+from modules.util import get_data_filtered_by_date, get_logs_filtered_by_date, get_logs_filtered_by_type
 
+# Metodo REST para obtener los logs
 # tipo_log+"#"+metodo+"#"+ruta+"#"+modulo+"#"+fecha+"#"+ip+"#"+usuario_autenticado+"#"+token+"#"+mensaje
 @app.route('/logs', methods=['GET'])
 def get_logs():
@@ -13,45 +16,24 @@ def get_logs():
         per_page = int(request.args.get('per_page', 10))
         initial_date = request.args.get('initial_date', '2020-01-01')
         final_date = request.args.get('final_date', formatted_date)
-        tipo_log = request.args.get('tipo_log', 'INFO')
+        log_type = request.args.get('log_type')
 
-        # Obtener los dates filtrados del directorio logs
-        datesfiltrados = []
-
-        initialdate = datetime.strptime(initial_date, "%Y-%m-%d").date()
-        finaldate = datetime.strptime(final_date, "%Y-%m-%d").date()
-
-        # Por si el usuario ingresa un ragno incorrecto de fechas
-        if initialdate > finaldate:
-            return jsonify({"error":"El rango de fechas es incorrecto"}), 404
-
-        # Listar los archivos del directorio logs que su nombre este en el rango de fechas dadas
-        for strdate in os.listdir('logs'):
-            formatedstrdate = strdate.split("_")[1].split(".")[0]
-            currentdate = datetime.strptime(formatedstrdate, "%Y-%m-%d").date()
-            print(str(currentdate) + "contra" + str(initialdate) + " " + str(finaldate))
-            if initialdate <= currentdate <= finaldate:
-                datesfiltrados.append(str(currentdate))
-        
+        # Obtener los dates de las fechas filtrados del directorio logs por rango de fecha
+        data_filtered_by_date_range = get_data_filtered_by_date(initial_date, final_date)
+                
         # Obtener los logs filtrados del directorio logs
-        # ... (código anterior) ...
+        logs_filtered_by_date = get_logs_filtered_by_date(data_filtered_by_date_range)
 
-        # Obtener los logs filtrados del directorio logs
-        logs = []
+        # Obtener los logs filtrados por tipo de log
+        if log_type != None:
+            logs = get_logs_filtered_by_type(logs_filtered_by_date, log_type)
+        else:
+            logs = logs_filtered_by_date
 
-        for datefiltrado in datesfiltrados:
-            with open("logs/log_"+datefiltrado+".log", "r") as log_file:
-                log_content = log_file.read()
-                log_entries = log_content.strip().split("\n\n")
-
-                for entry in log_entries:
-                    log_data = {}
-                    lines = entry.strip().split("\n")
-                    for line in lines:
-                        key, value = line.split(": ", 1)
-                        log_data[key] = value
-
-                    logs.append(log_data)
+        # Aplicar paginación
+        start = (page - 1) * per_page
+        end = start + per_page
+        paginated_logs = logs[start:end]
 
         # Retornar la lista de logs en formato JSON junto con información de paginación
         response = {
@@ -59,15 +41,118 @@ def get_logs():
             "per_page": per_page,
             "initial_date": initial_date,
             "final_date": final_date,
-            "tipo_log": tipo_log,
-            "logs": logs,
+            "log_type": log_type,
+            "logs": paginated_logs,
         }
         
-        if any(logs):
+        if any(paginated_logs):
             return jsonify(response), 200
         else:
-            return jsonify({"error":"Error al obtener los logs"}), 404
+            return jsonify({"error":"No se han encontrado logs con los parametros brindados"}), 404
 
     except Exception as err:
-        print("Exception:", err)
-        return jsonify({"error": "Error al obtener los logs"}), 500
+        print("Exception:", str(err))
+        return jsonify({"error": "Error al obtener los logs de aplicación, razón: "+str(err)}), 500
+    
+# Metodo REST para obtener los logs de una aplicación específica
+@app.route('/logs/<application>', methods=['GET'])
+def get_app_logs(application):
+    try:
+        formatted_date = datetime.now().strftime("%Y-%m-%d")
+        # Obtener los parámetros de paginación de la URL (opcional)
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', 10))
+        initial_date = request.args.get('initial_date', '2020-01-01')
+        final_date = request.args.get('final_date', formatted_date)
+        log_type = request.args.get('log_type')
+
+        # Obtener los dates filtrados del directorio logs filtradas por rango de fecha
+        data_filtered_by_date_range = get_data_filtered_by_date(initial_date, final_date)
+                
+        # Obtener los logs filtrados del directorio logs
+        logs_filtered_by_date = get_logs_filtered_by_date(data_filtered_by_date_range)
+
+        # Obtener los logs filtrados por tipo de log
+        if log_type != None:
+            logs = get_logs_filtered_by_type(logs_filtered_by_date, log_type)
+        else:
+            logs = logs_filtered_by_date
+
+        # Filtrar los logs por la aplicación específica
+        logs_by_application = [log for log in logs if log['APLICACION'] == application]
+
+        # Ordenar los logs por fecha de creación
+        logs_by_application.sort(key=lambda x: x['FECHA'])
+
+        # Aplicar paginación
+        start = (page - 1) * per_page
+        end = start + per_page
+        paginated_logs = logs_by_application[start:end]
+
+        # Retornar la lista de logs en formato JSON junto con información de paginación
+        response = {
+            "page": page,
+            "per_page": per_page,
+            "initial_date": initial_date,
+            "final_date": final_date,
+            "log_type": log_type,
+            "logs": paginated_logs,
+        }
+        
+        if any(paginated_logs):
+            return jsonify(response), 200
+        else:
+            return jsonify({"error":"No se han encontrado logs con los parametros brindados"}), 404
+
+    except Exception as err:
+        print("Exception:", str(err))
+        return jsonify({"error": "Error al obtener los logs de aplicación, razón: "+str(err)}), 500
+    
+# Metodo REST para crear un LOG
+@app.route('/logs', methods=['POST'])  
+def register_log():
+    try:
+        # Obtener datos del cuerpo de la solicitud JSON
+        data = request.get_json()
+
+        # Verificar si todos los campos requeridos están presentes en los datos
+        required_fields = ['TIPO-LOG',
+                            'METODO-HTTP',
+                            'RUTA',
+                            'MODULO',
+                            'APLICACION',
+                            'FECHA',
+                            'IP',
+                            'ACCION']
+        for field in required_fields:
+            if field not in data or not data[field]:
+                return jsonify({"error": f"El campo '{field}' es requerido"}), 400
+
+        tipo_log = data.get('TIPO-LOG')
+        metodo_log = data.get('METODO-HTTP')
+        ruta_log = data.get('RUTA')
+        modulo_log = data.get('MODULO')
+        aplicacion_log = data.get('APLICACION')
+        fecha_log = data.get('FECHA')
+        ip_log = data.get('IP')
+        usuario_log = data.get('USUARIO-AUTENTICADO', 'GUEST')
+        token_log = data.get('TOKEN', 'NO TOKEN')
+        acccion_log = data.get('ACCION')
+
+        # Crear el log
+        enviar_mensaje(tipo_log,
+                        metodo_log,
+                        ruta_log, 
+                        modulo_log, 
+                        aplicacion_log, 
+                        fecha_log, 
+                        ip_log, 
+                        usuario_log, 
+                        token_log, 
+                        acccion_log)
+    
+        return jsonify({"message": "Log registrado exitosamente"}), 201
+
+    except Exception as err:
+        print("Error: ", err)
+        return jsonify({"error": "Error al registrar el log"}), 500

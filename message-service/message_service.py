@@ -12,11 +12,12 @@ def callback(ch, method, properties, body):
     print(f"METODO-HTTP: {message_info[1]}")
     print(f"RUTA: {message_info[2]}")
     print(f"MODULO: {message_info[3]}")
-    print(f"FECHA: {message_info[4]}")
-    print(f"IP: {message_info[5]}")
-    print(f"USUARIO AUTENTICADO: {message_info[6]}")
-    print(f"TOKEN: {message_info[7]}")
-    print(f"ACCION: {message_info[8]}")
+    print(f"APLICACION: {message_info[4]}")
+    print(f"FECHA: {message_info[5]}")
+    print(f"IP: {message_info[6]}")
+    print(f"USUARIO AUTENTICADO: {message_info[7]}")
+    print(f"TOKEN: {message_info[8]}")
+    print(f"ACCION: {message_info[9]}")
 
     # Obtener la ruta actual del script
     current_path = os.path.dirname(os.path.realpath(__file__))
@@ -36,11 +37,12 @@ def callback(ch, method, properties, body):
         log_file.write(f"METODO-HTTP: {message_info[1]}\n")
         log_file.write(f"RUTA: {message_info[2]}\n")
         log_file.write(f"MODULO: {message_info[3]}\n")
-        log_file.write(f"FECHA: {message_info[4]}\n")
-        log_file.write(f"IP: {message_info[5]}\n")
-        log_file.write(f"USUARIO AUTENTICADO: {message_info[6]}\n")
-        log_file.write(f"TOKEN: {message_info[7]}\n")
-        log_file.write(f"ACCION: {message_info[8]}\n\n")
+        log_file.write(f"APLICACION: {message_info[4]}\n")
+        log_file.write(f"FECHA: {message_info[5]}\n")
+        log_file.write(f"IP: {message_info[6]}\n")
+        log_file.write(f"USUARIO AUTENTICADO: {message_info[7]}\n")
+        log_file.write(f"TOKEN: {message_info[8]}\n")
+        log_file.write(f"ACCION: {message_info[9]}\n\n")
 
 while True:
     try:
