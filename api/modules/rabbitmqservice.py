@@ -22,7 +22,7 @@ channel = gestormensajes.channel()
 channel.queue_declare(queue='logs')
 
 # Declaramos la función para envio de mensajes
-def enviar_mensaje(tipo_log, metodo, ruta, modulo, fecha, ip, usuario_autenticado, token, mensaje):
-    bodymensaje = tipo_log+"#"+metodo+"#"+ruta+"#"+modulo+"#"+fecha+"#"+ip+"#"+usuario_autenticado+"#"+token+"#"+mensaje
+def enviar_mensaje(tipo_log, metodo, ruta, modulo, app, fecha, ip, usuario_autenticado, token, mensaje):
+    bodymensaje = tipo_log+"#"+metodo+"#"+ruta+"#"+modulo+"#"+app+"#"+fecha+"#"+ip+"#"+usuario_autenticado+"#"+token+"#"+mensaje
     channel.basic_publish(exchange='', routing_key='logs', body=bodymensaje)
     print(f"Mensaje enviado: ID: {ip}\nMensaje: {mensaje}")
