@@ -2,7 +2,7 @@ import mysql.connector
 from modules.insertions import data
 
 # Insertar datos falsos en la base de datos
-def insertFakeData(db):
+def insert_fake_data(db):
     try:
         cursor = db.cursor()
         print("Insertando datos falsos en la base de datos...")
