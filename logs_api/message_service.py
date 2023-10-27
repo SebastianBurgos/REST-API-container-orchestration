@@ -44,18 +44,20 @@ def callback(ch, method, properties, body):
         log_file.write(f"TOKEN: {message_info[8]}\n")
         log_file.write(f"ACCION: {message_info[9]}\n\n")
 
-while True:
-    try:
-        print("Conectando a RabbitMQ...")
-        connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.environ.get("RABBITMQ_SERVICE"), heartbeat=600))
-        channel = connection.channel()
+def start_message_service():
+    while True:
+        try:
+            print("Conectando a RabbitMQ...")
+            connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.environ.get("RABBITMQ_SERVICE"), heartbeat=600))
+            channel = connection.channel()
 
-        channel.queue_declare(queue='logs')
+            channel.queue_declare(queue='logs')
 
-        channel.basic_consume(queue='logs', on_message_callback=callback, auto_ack=True)
+            channel.basic_consume(queue='logs', on_message_callback=callback, auto_ack=True)
 
-        print('Esperando mensajes...')
-        channel.start_consuming()
-    except pika.exceptions.AMQPConnectionError:
-        print("Reintentando conexión a RabbitMQ en 5 segundos...")
-        time.sleep(5)
+            print('Esperando mensajes...')
+
+            channel.start_consuming()
+        except pika.exceptions.AMQPConnectionError:
+            print("Reintentando conexión a RabbitMQ en 5 segundos...")
+            time.sleep(5)

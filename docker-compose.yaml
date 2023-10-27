@@ -18,26 +18,26 @@ services:
       - "5672:5672"
     networks:
       - mi_red
-
-  consumidor:
+  
+  logs_api:
     build:
-      context: ./message-service
+      context: ./logs_api
     ports:
       - "5005:5005"
     depends_on:
       - rabbitmq
     environment:
       RABBITMQ_SERVICE: rabbitmq
-      SERVICE_NAME: api-consumidor
+      SERVICE_NAME: logs_api
     volumes:
-      - ./message-service:/service
+      - ./logs_api:/app
     networks:
       - mi_red
     tty: true
 
-  api:
+  users_api:
     build:
-      context: ./api
+      context: ./users_api
     ports:
       - "5000:5000"
     depends_on:
@@ -49,11 +49,11 @@ services:
       PASSWORD: root_password
       DATABASE: ApiDB
       RABBITMQ_SERVICE: rabbitmq
-      SERVICE_NAME: api-users
+      SERVICE_NAME: users_api
       SECRET_KEY: microcevichesecretkey@2011
     volumes:
       # Monta la carpeta local en el contenedor
-      - ./api:/app
+      - ./users_api:/app
     networks:
       - mi_red
 

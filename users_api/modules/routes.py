@@ -56,9 +56,10 @@ def get_users():
         fecha = str(datetime.now())
         tipo_log = "INFO"
         modulo = "ROUTES.PY"
+        application = "USERS_API_REST"
         usuario_autenticado = "GUEST"
         token = "NO TOKEN"
-        enviar_mensaje(tipo_log, metodo, ruta, modulo, fecha, ip, usuario_autenticado, token, mensaje)
+        enviar_mensaje(tipo_log, metodo, ruta, modulo, application, fecha, ip, usuario_autenticado, token, mensaje)
 
         if any(users):
             return jsonify(response), 200
@@ -102,10 +103,10 @@ def register_user():
         fecha = str(datetime.now())
         tipo_log = "AUTH"
         modulo = "ROUTES.PY"
-        app = "USERS_API_REST"
+        application = "USERS_API_REST"
         usuario_autenticado = "USUARIO REGISTRADO: "+nombre+" "+apellido
         token = "NO TOKEN"
-        enviar_mensaje(tipo_log, metodo, ruta, modulo, app, fecha, ip, usuario_autenticado, token, mensaje)
+        enviar_mensaje(tipo_log, metodo, ruta, modulo, application, fecha, ip, usuario_autenticado, token, mensaje)
 
         return jsonify({"message": "Usuario registrado exitosamente"}), 201
 
@@ -252,10 +253,10 @@ def login_user():
             fecha = str(datetime.now())
             tipo_log = "AUTH"
             modulo = "ROUTES.PY"
-            app = "USERS_API_REST"
+            application = "USERS_API_REST"
             usuario_autenticado = "[ID: "+user[id]+"] "+user['nombre']+" "+user['apellido']
 
-            enviar_mensaje(tipo_log, metodo, ruta, modulo, app, fecha, ip, usuario_autenticado, token, mensaje)
+            enviar_mensaje(tipo_log, metodo, ruta, modulo, application, fecha, ip, usuario_autenticado, token, mensaje)
 
             return jsonify({"token": token,
                             "id_user": user['id']}), 200

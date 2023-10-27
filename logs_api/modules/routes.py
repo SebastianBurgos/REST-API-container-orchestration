@@ -1,5 +1,4 @@
-import os
-from api_message import app
+from api_logs import app
 from datetime import datetime
 from modules.rabbitmqservice import enviar_mensaje
 from flask import request, jsonify
