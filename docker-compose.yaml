@@ -1,23 +1,34 @@
 services:
-  mysql:
+  users_db_mysql:
     image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: ApiDB
+      MYSQL_DATABASE: users_db
       MYSQL_USER: user
       MYSQL_PASSWORD: user_password
     volumes:
-      # Esto es para inicializar la db de prueba pobladaxd 
       - ./users_api/init.sql:/docker-entrypoint-initdb.d/init.sql 
     networks:
-      - mi_red
+      - system_network
+  
+  profiles_db_mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: profiles_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user_password
+    volumes:
+      - ./profiles_api/init.sql:/docker-entrypoint-initdb.d/init.sql 
+    networks:
+      - system_network
   
   rabbitmq:
     image: rabbitmq:3.8
     ports:
       - "5672:5672"
     networks:
-      - mi_red
+      - system_network
   
   logs_api:
     build:
@@ -32,7 +43,7 @@ services:
     volumes:
       - ./logs_api:/app
     networks:
-      - mi_red
+      - system_network
     tty: true
 
   users_api:
@@ -41,21 +52,38 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      - mysql
+      - users_db_mysql
       - rabbitmq
     environment:
-      SERVICE: mysql
+      SERVICE: users_db_mysql
       USER: root
       PASSWORD: root_password
-      DATABASE: ApiDB
+      DATABASE: users_db
       RABBITMQ_SERVICE: rabbitmq
       SERVICE_NAME: users_api
       SECRET_KEY: microcevichesecretkey@2011
     volumes:
-      # Monta la carpeta local en el contenedor
       - ./users_api:/app
     networks:
-      - mi_red
+      - system_network
+  
+  profiles_api:
+    build:
+      context: ./profiles_api
+    ports:
+      - "4000:4000"
+    depends_on:
+      - profiles_db_mysql
+      - users_api
+    environment:
+      MYSQL_SERVICE: profiles_db_mysql
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user_password
+      MYSQL_DATABASE: profiles_db
+    volumes:
+      - ./profiles_api:/app
+    networks:
+      - system_network
 
 networks:
-  mi_red:
+  system_network:

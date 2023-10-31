@@ -44,10 +44,7 @@ def get_logs():
             "logs": paginated_logs,
         }
         
-        if any(paginated_logs):
-            return jsonify(response), 200
-        else:
-            return jsonify({"message":"No se han encontrado logs con los parametros brindados"}), 404
+        return jsonify(response), 200
 
     except Exception as err:
         print("Exception:", str(err))
@@ -98,10 +95,7 @@ def get_app_logs(application):
             "logs": paginated_logs,
         }
         
-        if any(paginated_logs):
-            return jsonify(response), 200
-        else:
-            return jsonify({"message":"No se han encontrado logs con los parametros brindados"}), 404
+        return jsonify(response), 200
 
     except Exception as err:
         print("Exception:", str(err))

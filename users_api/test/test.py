@@ -18,9 +18,6 @@ def test_obtener_lista_usuarios():
     data = response.json()
     assert "users" in data
 
-
-
-
 def test_obtener_lista_usuarios_vacia():
     # Define el valor del parámetro "page"
     page = 100  # Ajusta el valor según tus necesidades
@@ -36,8 +33,7 @@ def test_obtener_lista_usuarios_vacia():
 
     # Verifica que la respuesta contenga un mensaje de alerta
     data = response.json()
-    assert "error" in data
-    assert "Error al obtener usuarios" in data["error"]
+    assert data['users'] == []
 
 
 # Escenario en Gherkin
@@ -65,7 +61,7 @@ def test_registrar_nuevo_usuario():
     datos_registro = {
         "nombre": "Juan",
         "apellido": "Zambrano",
-        "email": "JooooZ@example.com",
+        "email": "JuanZ23@example.com",
         "clave": "contrasena123",
         "fecha_nacimiento": "2000-01-01"
     }
@@ -170,42 +166,7 @@ def test_buscar_usuario_por_id_faild():
     assert "error" in data
     assert "Usuario no encontrado" in data["error"]
 
-def test_eliminar_cuenta_usuario():
-    # Define las credenciales del usuario autenticado (email y contraseña)
-    email = "JoseZ@example.com"
-    clave = "contrasena123"
 
-    # Realiza la autenticación y obtén el token JWT
-    auth_payload = {
-        "email": email,
-        "clave": clave
-    }
-    auth_response = requests.post(URL + "/tokens", json=auth_payload)
-
-    # Verifica que la autenticación sea exitosa y obtén el token
-    assert auth_response.status_code == 200
-    auth_data = auth_response.json()
-    assert "token" in auth_data
-    token = auth_data["token"]
-
-    # Define el encabezado de autorización con el token JWT
-    headers = {
-        "Authorization": f"Bearer {token}"
-    }
-
-    # Define el endpoint para eliminar la cuenta del usuario autenticado
-    endpoint = "/users"
-
-    # Realiza la solicitud DELETE a tu API local con el encabezado de autorización
-    delete_response = requests.delete(URL + endpoint, headers=headers)
-
-    # Verifica el código de estado
-    assert delete_response.status_code == 200
-
-    # Verifica que la respuesta contenga un mensaje de despedida
-    delete_data = delete_response.json()
-    assert "message" in delete_data
-    assert "Usuario eliminado exitosamente" in delete_data["message"]
 
 def test_eliminar_cuenta_sin_autenticarse():
     # No se realiza la autenticación y no se obtiene un token JWT
@@ -227,7 +188,7 @@ def test_eliminar_cuenta_sin_autenticarse():
 
 def test_actualizar_datos_usuario():
     # Define las credenciales del usuario autenticado (email y contraseña)
-    email = "JoooZ@example.com"  # Ajusta el email según tus necesidades
+    email = "JuanZ23@example.com"  # Ajusta el email según tus necesidades
     clave = "contrasena123"  # Ajusta la contraseña según tus necesidades
 
     # Define el token JWT previamente autenticado
@@ -301,7 +262,7 @@ def test_actualizar_datos_sin_autenticar():
 def test_ingresar_sesion_exitosa():
     # Define los datos de inicio de sesión (Email y contraseña)
     datos_inicio_sesion = {
-        "email": "JoooZ@example.com",
+        "email": "JuanZ23@example.com",
         "clave": "contrasena123"
     }
 
@@ -343,8 +304,8 @@ def test_ingresar_sesion_contraseña_incorrecta():
 def test_cambiar_contraseña_exitosamente():
     # Define los datos de inicio de sesión (Email y contraseña correcta)
     datos_inicio_sesion = {
-        "email": "ana@example.com",  # Ajusta el Email según tus necesidades
-        "clave": "ana"  # Contraseña correcta
+        "email": "JuanZ23@example.com",  # Ajusta el Email según tus necesidades
+        "clave": "contraseña123"  # Contraseña correcta
     }
 
     # Define el endpoint para iniciar sesión y obtener el token JWT
@@ -428,3 +389,39 @@ def test_recuperar_contraseña():
     assert "token" in data_solicitar_recuperación
 
 
+def test_eliminar_cuenta_usuario():
+    # Define las credenciales del usuario autenticado (email y contraseña)
+    email = "JuanZ23@example.com"
+    clave = "nueva_contraseña123"
+
+    # Realiza la autenticación y obtén el token JWT
+    auth_payload = {
+        "email": email,
+        "clave": clave
+    }
+    auth_response = requests.post(URL + "/tokens", json=auth_payload)
+
+    # Verifica que la autenticación sea exitosa y obtén el token
+    assert auth_response.status_code == 200
+    auth_data = auth_response.json()
+    assert "token" in auth_data
+    token = auth_data["token"]
+
+    # Define el encabezado de autorización con el token JWT
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+
+    # Define el endpoint para eliminar la cuenta del usuario autenticado
+    endpoint = "/users"
+
+    # Realiza la solicitud DELETE a tu API local con el encabezado de autorización
+    delete_response = requests.delete(URL + endpoint, headers=headers)
+
+    # Verifica el código de estado
+    assert delete_response.status_code == 200
+
+    # Verifica que la respuesta contenga un mensaje de despedida
+    delete_data = delete_response.json()
+    assert "message" in delete_data
+    assert "Usuario eliminado exitosamente" in delete_data["message"]

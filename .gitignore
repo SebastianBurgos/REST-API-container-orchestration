@@ -1,0 +1,4 @@
+/profiles_api/node_modules/
+.idea/
+*.pytest_cache/
+*__pycache__/

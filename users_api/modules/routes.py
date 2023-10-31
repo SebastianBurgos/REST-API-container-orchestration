@@ -35,7 +35,7 @@ def get_users():
 
         # Consulta SQL para obtener una página de usuarios
         query = "SELECT * FROM Usuario WHERE nombre LIKE %s LIMIT %s, %s"
-        cursor.execute(query, (f"%{search_name}%", start_index, per_page))
+        cursor.execute(query, (f"%{search_name}%", start_index, end_index))
 
         # Obtener los resultados y cerrar el cursor
         users = cursor.fetchall()
@@ -64,7 +64,7 @@ def get_users():
         if any(users):
             return jsonify(response), 200
         else:
-            return jsonify({"error":"Error al obtener usuarios"}), 404
+            return jsonify(response), 404
 
     except mysql.connector.Error as err:
         print("Error:", err)
@@ -254,7 +254,7 @@ def login_user():
             tipo_log = "AUTH"
             modulo = "ROUTES.PY"
             application = "USERS_API_REST"
-            usuario_autenticado = "[ID: "+user[id]+"] "+user['nombre']+" "+user['apellido']
+            usuario_autenticado = "[ID: "+str(user['id'])+"] "+user['nombre']+" "+user['apellido']
 
             enviar_mensaje(tipo_log, metodo, ruta, modulo, application, fecha, ip, usuario_autenticado, token, mensaje)
 

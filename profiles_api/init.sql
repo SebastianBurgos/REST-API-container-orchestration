@@ -1,6 +1,6 @@
 -- Conexión a la base de datos
-CREATE DATABASE IF NOT EXISTS users_db;
-USE users_db;
+CREATE DATABASE IF NOT EXISTS profiles_db;
+USE profiles_db;
 
 -- Creación de la tabla Usuario
 CREATE TABLE IF NOT EXISTS Usuario (
