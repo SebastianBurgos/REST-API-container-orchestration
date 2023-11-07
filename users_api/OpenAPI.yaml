@@ -184,6 +184,70 @@ paths:
               schema:
                 $ref: '#/components/schemas/CodigoHTTP'
     
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Full-User'
+      responses:
+        '201':
+          description: Usuario registrado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '401':
+          description: Credenciales invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '406':
+          description: Not Acceptable (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '412':
+          description: El campo nombre es requerido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '415':
+          description: Unsupported Media Type (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '429':
+          description: Too Many Requests (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '500':
+          description: Error al registrar usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+    
     put:
       summary: Update logged in user
       requestBody:
@@ -303,72 +367,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CodigoHTTP' 
-
-  /users/register:
-    post:
-      summary: Register a new user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Full-User'
-      responses:
-        '201':
-          description: Usuario registrado exitosamente
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '401':
-          description: Credenciales invalidas
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '406':
-          description: Not Acceptable (en-US)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '412':
-          description: El campo nombre es requerido
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '415':
-          description: Unsupported Media Type (en-US)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '429':
-          description: Too Many Requests (en-US)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '500':
-          description: Error al registrar usuario
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
+                $ref: '#/components/schemas/CodigoHTTP'  
 
   /users/{user_id}:
     get:

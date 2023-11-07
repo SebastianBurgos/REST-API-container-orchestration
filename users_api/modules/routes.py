@@ -72,7 +72,7 @@ def get_users():
 
 
 # Método POST para registrar usuarios
-@app.route('/users/register', methods=['POST'])  
+@app.route('/users', methods=['POST'])  
 def register_user():
     try:
         data = request.get_json()  # Obtener datos del cuerpo de la solicitud JSON
