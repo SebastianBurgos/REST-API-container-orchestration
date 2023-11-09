@@ -1,11 +1,11 @@
 # Usa una imagen de Node.js en su versión "alpine"
 FROM node:alpine
 
-# Establece el directorio de trabajo en la imagen
-WORKDIR /app
-
 # Establecer la carpeta node_modules y sus permisos
-RUN mkdir -p ./node_modules && chown -R node:node ./
+RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+
+# Establece el directorio de trabajo en la imagen
+WORKDIR /home/node/app
 
 # Copia los archivos package.json y package-lock.json
 COPY package*.json ./
@@ -14,7 +14,7 @@ COPY package*.json ./
 USER node
 
 # Instala las dependencias
-RUN npm install
+RUN npm ci
 
 # Copia el resto de los archivos de la aplicación
 COPY --chown=node:node . .
