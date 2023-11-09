@@ -2,7 +2,7 @@
 FROM python:3.9-alpine
 
 # Define el directorio de trabajo
-WORKDIR /service
+WORKDIR /app
 
 # Copia todo el directorio actual
 COPY . .

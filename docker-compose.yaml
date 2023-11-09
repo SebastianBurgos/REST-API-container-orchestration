@@ -77,9 +77,12 @@ services:
       - users_api
     environment:
       MYSQL_SERVICE: profiles_db_mysql
-      MYSQL_USER: user
-      MYSQL_PASSWORD: user_password
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root_password
       MYSQL_DATABASE: profiles_db
+      RABBITMQ_SERVICE: rabbitmq
+      SERVICE_NAME: profiles_api
+      SECRET_KEY: microcevichesecretkey@2011
     volumes:
       - ./profiles_api:/app
     networks:

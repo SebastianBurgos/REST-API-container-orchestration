@@ -51,7 +51,8 @@ def start_message_service():
             connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.environ.get("RABBITMQ_SERVICE"), heartbeat=600))
             channel = connection.channel()
 
-            channel.queue_declare(queue='logs')
+            # Declarar una cola
+            channel.queue_declare(queue='logs', durable=True)
 
             channel.basic_consume(queue='logs', on_message_callback=callback, auto_ack=True)
 

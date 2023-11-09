@@ -3,7 +3,7 @@ import router from "./routes/routes.js";
 const app = express();
 
 // Definir el puerto
-const PORT = process.env.PORT || 4000;
+const PORT = 4000;
 
 // Para usar peticiones y respuestas en formato JSON
 app.use(express.json());

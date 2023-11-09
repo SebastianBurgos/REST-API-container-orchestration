@@ -1,38 +1,177 @@
-import conexion from "../database/db.js";
+import crearConexion from "../database/db.js";
+import { enviarMensaje } from "./messageController.js";
 
+const esperarConexion = async () => {
+    while (true) {
+        try {
+            const db = await crearConexion();
+            return db;
+        } catch (error) {
+            console.log('Reintentando conexión a la base de datos en 5 segundos...');
+            await new Promise(resolve => setTimeout(resolve, 5000));
+        }
+    }
+}
+
+const db = await esperarConexion();
+
+// Obtener la información de todos los perfiles
 export const getAllProfiles = async (req, res) => {
     try {
-        const query = `
-            SELECT * FROM Perfil
-        `;
-
-        const results = await new Promise((resolve, reject) => {
-            conexion.query(query, (error, results) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(results);
-                }
-            });
-        });
-
+        const [results] = await db.execute('SELECT * FROM Perfil');
         return res.json(results);
     } catch (error) {
-        return res.json(error);
+        console.error(error);
+        return res.json({ error: 'Error al obtener todos los perfiles' });
     }
 }
 
+// Obtener un perfil dado un id por parametro
 export const getProfile = async (req, res) => {
     try {
+        if (!req.headers.authorization) {
+            return res.status(401).json({
+                mensaje: 'No autorizado, token no existente'
+            });
+        }
+
         const id = req.params.id;
-        conexion.query('SELECT * FROM Perfil WHERE id = ?', [id], async (error, results) => {
-            if (error) {
-                return res.json(error);
-            } else {
-                return res.json(results);
-            }
-        })
+        const [results] = await db.execute('SELECT * FROM Perfil WHERE id = ?', [id]);
+        if (results.length > 0) {
+            return res.json(results[0]);
+        } else {
+            return res.status(404).json({ mensaje: 'No se encontró el perfil' });
+        }
     } catch (error) {
-        return res.json(error);
+        console.error(error);
+        return res.json({ error: error.message });
     }
 }
+
+// Actualizar el perfil de un usuario
+export const updateProfile = async (req, res) => {
+    try {
+        //Verificar si el token de bearer token es válido
+        if (!req.headers.authorization) {
+            return res.status(401).json({
+                mensaje: 'No autorizado, token no existente'
+            });
+        }
+
+        const token_auth = req.headers.authorization.split(' ')[1];
+
+        const profile_id = parseInt(req.params.id);
+        
+        const {
+            url_pagina,
+            apodo, 
+            informacion_publica, 
+            direccion_correspondencia, 
+            biografia, 
+            organizacion, 
+            pais
+        } = req.body;
+        
+        const values = [];
+        let updateQuery = `UPDATE Perfil SET `;
+        
+        if (url_pagina !== undefined && url_pagina !== '') {
+            updateQuery += `url_pagina = ?, `;
+            values.push(url_pagina);
+        }
+        
+        if (apodo !== undefined && apodo !== '') {
+            updateQuery += `apodo = ?, `;
+            values.push(apodo);
+        }
+        
+        if (informacion_publica !== undefined && informacion_publica !== '') {
+            updateQuery += `informacion_publica = ?, `;
+            values.push(informacion_publica);
+        }
+        
+        if (direccion_correspondencia !== undefined && direccion_correspondencia !== '') {
+            updateQuery += `direccion_correspondencia = ?, `;
+            values.push(direccion_correspondencia);
+        }
+        
+        if (biografia !== undefined && biografia !== '') {
+            updateQuery += `biografia = ?, `;
+            values.push(biografia);
+        }
+        
+        if (organizacion !== undefined && organizacion !== '') {
+            updateQuery += `organizacion = ?, `;
+            values.push(organizacion);
+        }
+        
+        if (pais !== undefined && pais !== '') {
+            updateQuery += `pais = ?, `;
+            values.push(pais);
+        }
+        
+        // Quitar la última coma y espacio del string updateQuery
+        updateQuery = updateQuery.slice(0, -2);
+        
+        // Agregar la condición WHERE
+        updateQuery += ` WHERE id = ?`;
+        values.push(profile_id);
+        
+        const [results] = await db.execute(updateQuery, values);
+            
+        if(results.affectedRows > 0){
+            // Después de actualizar el perfil, envía el mensaje
+            const tipo_log = "PROFILE";
+            const metodo = "PUT";
+            const ruta = "/profiles/:id"; 
+            const modulo = "PROFILECONTROLLER.JS";
+            const application = "PROFILES_API_REST";
+            const usuario_autenticado = `PERFIL CREADO PARA EL USUARIO CON ID: ${profile_id}`;
+            const token = token_auth; // O el token correcto
+            const mensaje = "NUEVO PERFIL CREADO."; // O el mensaje correcto
+            const fecha = obtenerFechaActual();
+
+            const ip = obtenerIPv4(req); // Obtiene la dirección IP del cliente
+
+            await enviarMensaje(tipo_log, metodo, ruta, modulo, application, fecha, ip, usuario_autenticado, token, mensaje);
+            
+            return res.status(200).json({
+                mensaje: "Perfil actualizado exitosamente",
+                detalles: "Filas actualizadas: "+ results.affectedRows
+            });
+        }else{
+            return res.status(401).json({
+                mensaje: "Perfil no actualizado",
+                detalles: "El perfil no ha sido encontrado"
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            error: 'Ha ocurrido un error al actualizar el perfil',
+            detalles: error.message
+        });
+    }
+}
+
+function obtenerFechaActual(){
+    const fechaActual = new Date();
+
+    const año = fechaActual.getFullYear();
+    const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
+    const dia = String(fechaActual.getDate()).padStart(2, '0');
+
+    const horas = String(fechaActual.getHours()).padStart(2, '0');
+    const minutos = String(fechaActual.getMinutes()).padStart(2, '0');
+    const segundos = String(fechaActual.getSeconds()).padStart(2, '0');
+    const milisegundos = fechaActual.getMilliseconds();
+
+    const fechaFormateada = `${año}-${mes}-${dia} ${horas}:${minutos}:${segundos}.${milisegundos}`;
+
+    return fechaFormateada;
+}
+
+const obtenerIPv4 = (req) => {
+    const rawIp = req.connection.remoteAddress;
+    const ipv4 = rawIp.replace(/^::ffff:/, '');
+    return ipv4;
+};
