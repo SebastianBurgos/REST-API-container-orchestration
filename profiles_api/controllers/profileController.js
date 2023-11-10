@@ -49,6 +49,64 @@ export const getProfile = async (req, res) => {
 }
 
 // Actualizar el perfil de un usuario
+export const createProfile = async (req, res) => {
+    try {
+        const { id, nombre, apellido, email } = req.body;
+        const url_pagina = email;
+        const apodo = `${nombre} ${apellido}`;
+        const informacion_publica = 1;
+        const direccion_correspondencia = "N/A";
+        const biografia = "N/A";
+        const organizacion = "N/A";
+        const pais = "N/A";
+
+        const values = [
+            id,
+            url_pagina,
+            apodo,
+            informacion_publica,
+            direccion_correspondencia,
+            biografia,
+            organizacion,
+            pais
+        ];
+
+        const [results] = await db.execute('INSERT INTO Perfil (id, url_pagina, apodo, informacion_publica, direccion_correspondencia, biografia, organizacion, pais) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', values);
+            
+        if(results.affectedRows > 0){
+            const tipo_log = "PROFILE";
+            const metodo = "POST";
+            const ruta = "/profiles"; 
+            const modulo = "PROFILECONTROLLER.JS";
+            const application = "PROFILES_API_REST";
+            const usuario_autenticado = `USUARIO CON ID: ${id}`;
+            const token = "NO TOKEN";
+            const mensaje = "NUEVO PERFIL CREADO.";
+            const fecha = obtenerFechaActual();
+
+            const ip = obtenerIPv4(req); // Obtiene la dirección IP del cliente
+
+            await enviarMensaje(tipo_log, metodo, ruta, modulo, application, fecha, ip, usuario_autenticado, token, mensaje);
+            
+            return res.status(200).json({
+                mensaje: "Perfil creado exitosamente",
+                detalles: "Filas afectadas: "+ results.affectedRows
+            });
+        }else{
+            return res.status(500).json({
+                mensaje: "Perfil no creado",
+                detalles: "Ha ocurrido un error en la base de datos al crear el perfil"
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            error: 'Ha ocurrido un error al crear el perfil',
+            detalles: error.message
+        });
+    }
+}
+
+// Actualizar el perfil de un usuario
 export const updateProfile = async (req, res) => {
     try {
         //Verificar si el token de bearer token es válido
@@ -126,9 +184,9 @@ export const updateProfile = async (req, res) => {
             const ruta = "/profiles/:id"; 
             const modulo = "PROFILECONTROLLER.JS";
             const application = "PROFILES_API_REST";
-            const usuario_autenticado = `PERFIL CREADO PARA EL USUARIO CON ID: ${profile_id}`;
-            const token = token_auth; // O el token correcto
-            const mensaje = "NUEVO PERFIL CREADO."; // O el mensaje correcto
+            const usuario_autenticado = `USUARIO CON ID: ${profile_id}`;
+            const token = token_auth;
+            const mensaje = "PERFIL ACTUALIZADO.";
             const fecha = obtenerFechaActual();
 
             const ip = obtenerIPv4(req); // Obtiene la dirección IP del cliente

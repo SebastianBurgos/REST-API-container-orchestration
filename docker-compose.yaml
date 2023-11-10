@@ -66,6 +66,7 @@ services:
       RABBITMQ_SERVICE: rabbitmq
       SERVICE_NAME: users_api
       SECRET_KEY: microcevichesecretkey@2011
+      PROFILES_API_URL: http://profiles_api:4000
     volumes:
       - ./users_api:/app
     restart: always
@@ -89,7 +90,7 @@ services:
       SERVICE_NAME: profiles_api
       SECRET_KEY: microcevichesecretkey@2011
     volumes:
-      - ./profiles_api:/app
+      - ./profiles_api:/home/node/app
     restart: always
     networks:
       - system_network

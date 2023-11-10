@@ -4,7 +4,7 @@ USE profiles_db;
 
 -- Creación de la tabla Usuario
 CREATE TABLE IF NOT EXISTS Perfil (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT PRIMARY KEY,
     url_pagina VARCHAR(255) NOT NULL,
     apodo VARCHAR(60) NOT NULL,
     informacion_publica BOOLEAN NOT NULL,
@@ -24,13 +24,13 @@ CREATE TABLE IF NOT EXISTS RedesSociales (
 );
 
 -- Inserción de datos de prueba en la tabla Usuario
-INSERT INTO Perfil (url_pagina, apodo, informacion_publica, direccion_correspondencia, biografia, organizacion, pais)
+INSERT INTO Perfil (id, url_pagina, apodo, informacion_publica, direccion_correspondencia, biografia, organizacion, pais)
 VALUES
-    ('juanperez.com', 'JuaniPerro', false, 'cl 19 #3 2-100', 'Juanito nacio en macondo y estudio leyes', 'FARC', 'Colombia'),
-    ('mariazungona.com', 'Marilu123', true, 'Av. Principal #45', 'Marilu es una apasionada de la música y le encanta viajar.', 'MusicCorp', 'Argentina'),
-    ('carlosote.com', 'CG1995', true, 'Calle Mayor #7', 'Carlos es un apasionado por la tecnología y siempre está buscando aprender algo nuevo.', 'Tech Innovators', 'España'),
-    ('analuferita.com', 'AnaMtz92', true, 'Carrera 12 #34-56', 'Ana es una amante de los animales y dedica su tiempo libre a cuidar a perros y gatos abandonados.', 'Animal Lovers Foundation', 'México'),
-    ('luisandro', 'LuiRod98', true, 'Rua Principal #23', 'Luis es un fanático del deporte y disfruta jugando al fútbol en su tiempo libre.', 'Sports Unlimited', 'Brasil');
+    (1, 'juanperez.com', 'JuaniPerro', false, 'cl 19 #3 2-100', 'Juanito nacio en macondo y estudio leyes', 'FARC', 'Colombia'),
+    (2, 'mariazungona.com', 'Marilu123', true, 'Av. Principal #45', 'Marilu es una apasionada de la música y le encanta viajar.', 'MusicCorp', 'Argentina'),
+    (3, 'carlosote.com', 'CG1995', true, 'Calle Mayor #7', 'Carlos es un apasionado por la tecnología y siempre está buscando aprender algo nuevo.', 'Tech Innovators', 'España'),
+    (4, 'analuferita.com', 'AnaMtz92', true, 'Carrera 12 #34-56', 'Ana es una amante de los animales y dedica su tiempo libre a cuidar a perros y gatos abandonados.', 'Animal Lovers Foundation', 'México'),
+    (5, 'luisandro', 'LuiRod98', true, 'Rua Principal #23', 'Luis es un fanático del deporte y disfruta jugando al fútbol en su tiempo libre.', 'Sports Unlimited', 'Brasil');
 
 -- Inserción de datos de prueba en la tabla RedesSociales
 INSERT INTO RedesSociales (nombre, url_rs, perfil_id)

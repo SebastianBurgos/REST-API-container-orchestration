@@ -1,10 +1,11 @@
 import express from "express";
-import { getAllProfiles, getProfile, updateProfile } from "../controllers/profileController.js";
+import { getAllProfiles, getProfile, createProfile, updateProfile } from "../controllers/profileController.js";
 const router = express.Router()
 
 // ----------------------- Rutas -----------------------
-router.get('/perfiles', getAllProfiles)
-router.get('/perfiles/:id', getProfile)
-router.put('/perfiles/:id', updateProfile)
+router.get('/profiles', getAllProfiles)
+router.get('/profiles/:id', getProfile)
+router.post('/profiles', createProfile)
+router.put('/profiles/:id', updateProfile)
 
 export default router

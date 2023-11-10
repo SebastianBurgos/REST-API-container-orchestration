@@ -6,7 +6,7 @@ from app import app
 from flask import request, jsonify
 from modules.database import db
 from modules.rabbitmqservice import enviar_mensaje
-from modules.utils import validar_token
+from modules.utils import validar_token, evento_crear_perfil
 
 # Clave secreta para la generación y verificación de tokens JWT
 SECRET_KEY = os.environ.get("SECRET_KEY")
@@ -93,6 +93,7 @@ def register_user():
         query = "INSERT INTO Usuario (nombre, apellido, email, clave, fecha_nacimiento) VALUES (%s, %s, %s, %s, %s)"
         values = (nombre, apellido, email, clave, fecha_nacimiento)
         cursor.execute(query, values)
+        usuario_id = cursor.lastrowid
         db.commit()
         cursor.close()
 
@@ -107,6 +108,7 @@ def register_user():
         usuario_autenticado = "USUARIO REGISTRADO: "+nombre+" "+apellido
         token = "NO TOKEN"
         enviar_mensaje(tipo_log, metodo, ruta, modulo, application, fecha, ip, usuario_autenticado, token, mensaje)
+        evento_crear_perfil(usuario_id)
 
         return jsonify({"message": "Usuario registrado exitosamente"}), 201
 
