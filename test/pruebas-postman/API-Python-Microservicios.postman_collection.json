@@ -57,7 +57,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{root_route_users}}/users?page=1&per_page=5",
+									"raw": "{{root_route_users}}/users?page=4&per_page=5",
 									"host": [
 										"{{root_route_users}}"
 									],
@@ -67,7 +67,7 @@
 									"query": [
 										{
 											"key": "page",
-											"value": "1"
+											"value": "4"
 										},
 										{
 											"key": "per_page",
@@ -1727,12 +1727,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{root_route_profiles}}/perfiles",
+							"raw": "{{root_route_profiles}}",
 							"host": [
 								"{{root_route_profiles}}"
-							],
-							"path": [
-								"perfiles"
 							]
 						}
 					},
@@ -1802,12 +1799,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{root_route_profiles}}/perfiles/2",
+							"raw": "{{root_route_profiles}}/2",
 							"host": [
 								"{{root_route_profiles}}"
 							],
 							"path": [
-								"perfiles",
 								"2"
 							]
 						}
@@ -1869,12 +1865,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{root_route_profiles}}/perfiles/1000",
+							"raw": "{{root_route_profiles}}/1000",
 							"host": [
 								"{{root_route_profiles}}"
 							],
 							"path": [
-								"perfiles",
 								"1000"
 							]
 						}
@@ -1951,13 +1946,90 @@
 							}
 						},
 						"url": {
-							"raw": "{{root_route_profiles}}/perfiles/2",
+							"raw": "{{root_route_profiles}}/2",
 							"host": [
 								"{{root_route_profiles}}"
 							],
 							"path": [
-								"perfiles",
 								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create-Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required fields - mensaje and detalles\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData).to.be.an('object');\r",
+									"  pm.expect(responseData.mensaje).to.exist;\r",
+									"  pm.expect(responseData.detalles).to.exist;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Mensaje is a non-empty string\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData.mensaje).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Mensaje should not be empty\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Detalles is a non-empty string\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData).to.be.an('object');\r",
+									"  pm.expect(responseData.detalles).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is in an acceptable range\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000); // Assuming an acceptable range is below 1000ms\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 100,\r\n    \"nombre\": \"Sebas\",\r\n    \"apellido\": \"Burgos\",\r\n    \"email\": \"sebastianburgos@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{root_route_profiles}}",
+							"host": [
+								"{{root_route_profiles}}"
 							]
 						}
 					},
@@ -2012,12 +2084,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{root_route_profiles}}/perfiles/2",
+							"raw": "{{root_route_profiles}}/2",
 							"host": [
 								"{{root_route_profiles}}"
 							],
 							"path": [
-								"perfiles",
 								"2"
 							]
 						}
@@ -2093,12 +2164,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{root_route_profiles}}/perfiles/1000",
+							"raw": "{{root_route_profiles}}/1000",
 							"host": [
 								"{{root_route_profiles}}"
 							],
 							"path": [
-								"perfiles",
 								"1000"
 							]
 						}
