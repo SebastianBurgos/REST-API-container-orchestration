@@ -1,4 +1,4 @@
-import express from "express";
+import express from "../node_modules/express/index.js";
 import { getAllProfiles, getProfile, createProfile, updateProfile } from "../controllers/profileController.js";
 const router = express.Router()
 
