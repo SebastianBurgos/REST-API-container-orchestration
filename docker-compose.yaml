@@ -8,6 +8,7 @@ services:
       MYSQL_PASSWORD: user_password
     volumes:
       - ./users_api/init.sql:/docker-entrypoint-initdb.d/init.sql 
+    restart: always
     networks:
       - system_network
   
@@ -19,7 +20,8 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: user_password
     volumes:
-      - ./profiles_api/init.sql:/docker-entrypoint-initdb.d/init.sql 
+      - ./profiles_api/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
     networks:
       - system_network
   
@@ -27,6 +29,7 @@ services:
     image: rabbitmq:3.8
     ports:
       - "5672:5672"
+    restart: always
     networks:
       - system_network
   
@@ -44,6 +47,7 @@ services:
       - ./logs_api:/app
     networks:
       - system_network
+    restart: always
     tty: true
 
   users_api:
@@ -62,8 +66,10 @@ services:
       RABBITMQ_SERVICE: rabbitmq
       SERVICE_NAME: users_api
       SECRET_KEY: microcevichesecretkey@2011
+      PROFILES_API_URL: http://profiles_api:4000
     volumes:
       - ./users_api:/app
+    restart: always
     networks:
       - system_network
   
@@ -77,11 +83,15 @@ services:
       - users_api
     environment:
       MYSQL_SERVICE: profiles_db_mysql
-      MYSQL_USER: user
-      MYSQL_PASSWORD: user_password
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root_password
       MYSQL_DATABASE: profiles_db
+      RABBITMQ_SERVICE: rabbitmq
+      SERVICE_NAME: profiles_api
+      SECRET_KEY: microcevichesecretkey@2011
     volumes:
-      - ./profiles_api:/app
+      - ./profiles_api:/home/node/app
+    restart: always
     networks:
       - system_network
 

@@ -67,7 +67,7 @@ def test_registrar_nuevo_usuario():
     }
 
     # Define el endpoint para registrar un nuevo usuario
-    endpoint = "/users/register"
+    endpoint = "/users"
 
     # Realiza la solicitud POST a tu API local
     response = requests.post(URL + endpoint, json=datos_registro)
@@ -90,7 +90,7 @@ def test_usuario_falta_datos_registro():
     }
 
     # Define el endpoint para registrar un nuevo usuario
-    endpoint = "/users/register"
+    endpoint = "/users"
 
     # Realiza la solicitud POST a tu API local
     response = requests.post(URL + endpoint, json=datos_registro)
@@ -114,7 +114,7 @@ def test_usuario_formato_fecha_erroneo():
     }
 
     # Define el endpoint para registrar un nuevo usuario
-    endpoint = "/users/register"
+    endpoint = "/users"
 
     # Realiza la solicitud POST a tu API local
     response = requests.post(URL + endpoint, json=datos_registro)
@@ -165,8 +165,6 @@ def test_buscar_usuario_por_id_faild():
     data = response.json()
     assert "error" in data
     assert "Usuario no encontrado" in data["error"]
-
-
 
 def test_eliminar_cuenta_sin_autenticarse():
     # No se realiza la autenticación y no se obtiene un token JWT

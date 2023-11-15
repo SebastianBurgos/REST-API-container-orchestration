@@ -6,6 +6,7 @@ from app import app
 from flask import request, jsonify
 from modules.database import db
 from modules.rabbitmqservice import enviar_mensaje
+from modules.utils import validar_token, evento_crear_perfil
 
 # Clave secreta para la generación y verificación de tokens JWT
 SECRET_KEY = os.environ.get("SECRET_KEY")
@@ -70,9 +71,8 @@ def get_users():
         print("Error:", err)
         return jsonify({"error": "Error al obtener usuarios"}), 500
 
-
 # Método POST para registrar usuarios
-@app.route('/users/register', methods=['POST'])  
+@app.route('/users', methods=['POST'])  
 def register_user():
     try:
         data = request.get_json()  # Obtener datos del cuerpo de la solicitud JSON
@@ -89,10 +89,11 @@ def register_user():
         clave = data.get('clave')
         fecha_nacimiento = data.get('fecha_nacimiento')
 
-        cursor = db.cursor()
+        cursor = db.cursor(dictionary=True)
         query = "INSERT INTO Usuario (nombre, apellido, email, clave, fecha_nacimiento) VALUES (%s, %s, %s, %s, %s)"
         values = (nombre, apellido, email, clave, fecha_nacimiento)
         cursor.execute(query, values)
+        usuario_id = cursor.lastrowid
         db.commit()
         cursor.close()
 
@@ -107,6 +108,7 @@ def register_user():
         usuario_autenticado = "USUARIO REGISTRADO: "+nombre+" "+apellido
         token = "NO TOKEN"
         enviar_mensaje(tipo_log, metodo, ruta, modulo, application, fecha, ip, usuario_autenticado, token, mensaje)
+        evento_crear_perfil(usuario_id)
 
         return jsonify({"message": "Usuario registrado exitosamente"}), 201
 
@@ -139,16 +141,17 @@ def delete_user_by_id():
     try:
         # Obtener el token del encabezado Authorization
         auth_header = request.headers.get('Authorization')
-        if auth_header is None:
-            return jsonify({"error": "Token de autorización faltante"}), 401
+
+        # Llama a la función para validar el token
+        valido, payload, error_code = validar_token(auth_header)
+
+        if not valido:
+            return jsonify(payload), error_code
+
+        # Si el token es válido, puedes acceder a los datos del payload
+        user_id = payload['user_id']
         
-        token = auth_header.split(' ')[1]  # Eliminar la palabra "Bearer" del token
-        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-
-        # Obtener el ID del usuario autenticado
-        user_id = payload.get('user_id')
-
-        cursor = db.cursor()
+        cursor = db.cursor(dictionary=True)
         query_delete = "DELETE FROM Usuario WHERE id = %s"
         cursor.execute(query_delete, (user_id,))
         db.commit()
@@ -171,13 +174,16 @@ def update_user_by_id():
         # Obtener el token del encabezado Authorization
         auth_header = request.headers.get('Authorization')
 
-        if auth_header is None:
-            return jsonify({"error": "Token de autorización faltante"}), 401
-        cursor = db.cursor(dictionary=True)
-        
-        token = auth_header.split(' ')[1]  # Eliminar la palabra "Bearer" del token
-        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+        # Llama a la función para validar el token
+        valido, payload, error_code = validar_token(auth_header)
 
+        if not valido:
+            return jsonify(payload), error_code
+
+        # Si el token es válido, puedes acceder a los datos del payload
+        user_id = payload['user_id']
+
+    
         data = request.get_json()
         nombre = data.get('nombre')
         apellido = data.get('apellido')
@@ -205,8 +211,9 @@ def update_user_by_id():
 
         # Agrega la condición WHERE para actualizar el usuario específico
         query_update += " WHERE id = %s"
-        values.append(payload.get('user_id'))
+        values.append(user_id)
 
+        cursor = db.cursor(dictionary=True)
         # Ejecuta la consulta SQL con los valores
         cursor.execute(query_update, values)
         db.commit()
@@ -276,14 +283,15 @@ def change_password():
     try:
         # Obtener el token del encabezado Authorization
         auth_header = request.headers.get('Authorization')
-        if auth_header is None:
-            return jsonify({"error": "Token de autorización faltante"}), 401
 
-        token = auth_header.split(' ')[1]  # Eliminar la palabra "Bearer" del token
-        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+        # Llama a la función para validar el token
+        valido, payload, error_code = validar_token(auth_header)
 
-        # Obtener el ID del usuario autenticado
-        user_id = payload.get('user_id')
+        if not valido:
+            return jsonify(payload), error_code
+
+        # Si el token es válido, puedes acceder a los datos del payload
+        user_id = payload['user_id']
 
         data = request.get_json()
         nueva_clave = data.get('nueva_clave')

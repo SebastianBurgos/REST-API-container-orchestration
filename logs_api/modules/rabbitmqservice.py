@@ -19,7 +19,7 @@ gestormensajes = esperar_rabbitmq()
 
 channel = gestormensajes.channel()
 # Declarar una cola
-channel.queue_declare(queue='logs')
+channel.queue_declare(queue='logs', durable=True)
 
 # Declaramos la función para envio de mensajes
 def enviar_mensaje(tipo_log, metodo, ruta, modulo, app, fecha, ip, usuario_autenticado, token, mensaje):

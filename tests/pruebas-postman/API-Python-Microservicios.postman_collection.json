@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "112ba9ad-8093-4a4a-afe6-7c6b93e8f395",
+		"_postman_id": "9688ceef-7694-4739-b2ca-379fdd25770a",
 		"name": "API-Python-Microservicios",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "27630454"
@@ -57,19 +57,17 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:5000/users?page=1&per_page=5",
-									"protocol": "http",
+									"raw": "{{root_route_users}}/users?page=4&per_page=5",
 									"host": [
-										"localhost"
+										"{{root_route_users}}"
 									],
-									"port": "5000",
 									"path": [
 										"users"
 									],
 									"query": [
 										{
 											"key": "page",
-											"value": "1"
+											"value": "4"
 										},
 										{
 											"key": "per_page",
@@ -97,7 +95,6 @@
 											"    const responseData = pm.response.json();\r",
 											"\r",
 											"    pm.expect(responseData).to.be.an('object');\r",
-											"    pm.expect(responseData.error).to.exist;\r",
 											"});\r",
 											"\r",
 											"pm.test(\"El tiempo de respuesta debe ser menor a 500ms\", function () {\r",
@@ -112,12 +109,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:5000/users?page=1000&per_page=1002",
-									"protocol": "http",
+									"raw": "{{root_route_users}}/users?page=1000&per_page=1002",
 									"host": [
-										"localhost"
+										"{{root_route_users}}"
 									],
-									"port": "5000",
 									"path": [
 										"users"
 									],
@@ -146,7 +141,6 @@
 											"pm.test(\"El codigo de estado de respuesta debe ser 200\", function () {\r",
 											"    pm.expect(pm.response.code).to.equal(200);\r",
 											"});\r",
-											"\r",
 											"\r",
 											"pm.test(\"Validar la 'page' y el campo 'per_page'\", function () {\r",
 											"    const responseData = pm.response.json();\r",
@@ -187,19 +181,17 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:5000/users?search_name=USERX",
-									"protocol": "http",
+									"raw": "{{root_route_users}}/users?search_name=juan",
 									"host": [
-										"localhost"
+										"{{root_route_users}}"
 									],
-									"port": "5000",
 									"path": [
 										"users"
 									],
 									"query": [
 										{
 											"key": "search_name",
-											"value": "USERX"
+											"value": "juan"
 										}
 									]
 								}
@@ -261,15 +253,12 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5000/users/register",
-									"protocol": "http",
+									"raw": "{{root_route_users}}/users",
 									"host": [
-										"localhost"
+										"{{root_route_users}}"
 									],
-									"port": "5000",
 									"path": [
-										"users",
-										"register"
+										"users"
 									]
 								}
 							},
@@ -330,15 +319,12 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5000/users/register",
-									"protocol": "http",
+									"raw": "{{root_route_users}}/users",
 									"host": [
-										"localhost"
+										"{{root_route_users}}"
 									],
-									"port": "5000",
 									"path": [
-										"users",
-										"register"
+										"users"
 									]
 								}
 							},
@@ -400,15 +386,12 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5000/users/register",
-									"protocol": "http",
+									"raw": "{{root_route_users}}/users",
 									"host": [
-										"localhost"
+										"{{root_route_users}}"
 									],
-									"port": "5000",
 									"path": [
-										"users",
-										"register"
+										"users"
 									]
 								}
 							},
@@ -427,8 +410,8 @@
 									"script": {
 										"exec": [
 											"const responseData = pm.response.json();",
-											"pm.globals.set(\"id-loguedin\", responseData.id_user);",
-											"pm.globals.set(\"token-logueado\", responseData.token);",
+											"pm.environment.set(\"id-loguedin\", responseData.id_user);",
+											"pm.environment.set(\"token\", responseData.token);",
 											"",
 											"pm.test(\"El codigo de estado de respuesta debe ser 200\", function () {",
 											"    pm.expect(pm.response.code).to.equal(200);",
@@ -482,12 +465,10 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5000/tokens",
-									"protocol": "http",
+									"raw": "{{root_route_users}}/tokens",
 									"host": [
-										"localhost"
+										"{{root_route_users}}"
 									],
-									"port": "5000",
 									"path": [
 										"tokens"
 									]
@@ -548,12 +529,10 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5000/tokens",
-									"protocol": "http",
+									"raw": "{{root_route_users}}/tokens",
 									"host": [
-										"localhost"
+										"{{root_route_users}}"
 									],
-									"port": "5000",
 									"path": [
 										"tokens"
 									]
@@ -609,12 +588,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:5000/users/{{id-loguedin}}",
-									"protocol": "http",
+									"raw": "{{root_route_users}}/users/{{id-loguedin}}",
 									"host": [
-										"localhost"
+										"{{root_route_users}}"
 									],
-									"port": "5000",
 									"path": [
 										"users",
 										"{{id-loguedin}}"
@@ -664,12 +641,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:5000/users/1000",
-									"protocol": "http",
+									"raw": "{{root_route_users}}/users/1000",
 									"host": [
-										"localhost"
+										"{{root_route_users}}"
 									],
-									"port": "5000",
 									"path": [
 										"users",
 										"1000"
@@ -735,7 +710,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "{{token-logueado}}",
+											"value": "{{token}}",
 											"type": "string"
 										}
 									]
@@ -752,12 +727,10 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5000/users",
-									"protocol": "http",
+									"raw": "{{root_route_users}}/users",
 									"host": [
-										"localhost"
+										"{{root_route_users}}"
 									],
-									"port": "5000",
 									"path": [
 										"users"
 									]
@@ -833,12 +806,10 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5000/users",
-									"protocol": "http",
+									"raw": "{{root_route_users}}/users",
 									"host": [
-										"localhost"
+										"{{root_route_users}}"
 									],
-									"port": "5000",
 									"path": [
 										"users"
 									]
@@ -895,7 +866,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "{{token-logueado}}",
+											"value": "{{token}}",
 											"type": "string"
 										}
 									]
@@ -912,12 +883,10 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5000/users/user/new-password",
-									"protocol": "http",
+									"raw": "{{root_route_users}}/users/user/new-password",
 									"host": [
-										"localhost"
+										"{{root_route_users}}"
 									],
-									"port": "5000",
 									"path": [
 										"users",
 										"user",
@@ -990,12 +959,10 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5000/users/user/new-password",
-									"protocol": "http",
+									"raw": "{{root_route_users}}/users/user/new-password",
 									"host": [
-										"localhost"
+										"{{root_route_users}}"
 									],
-									"port": "5000",
 									"path": [
 										"users",
 										"user",
@@ -1060,7 +1027,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "{{token-logueado}}",
+											"value": "{{token}}",
 											"type": "string"
 										}
 									]
@@ -1068,12 +1035,10 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:5000/users",
-									"protocol": "http",
+									"raw": "{{root_route_users}}/users",
 									"host": [
-										"localhost"
+										"{{root_route_users}}"
 									],
-									"port": "5000",
 									"path": [
 										"users"
 									]
@@ -1137,12 +1102,10 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:5000/users",
-									"protocol": "http",
+									"raw": "{{root_route_users}}/users",
 									"host": [
-										"localhost"
+										"{{root_route_users}}"
 									],
-									"port": "5000",
 									"path": [
 										"users"
 									]
@@ -1193,15 +1156,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{root_route}}",
+							"raw": "{{root_route_logs}}?page=3",
 							"host": [
-								"{{root_route}}"
+								"{{root_route_logs}}"
 							],
 							"query": [
 								{
 									"key": "page",
-									"value": "1",
-									"disabled": true
+									"value": "3"
 								},
 								{
 									"key": "per_page",
@@ -1257,9 +1219,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{root_route}}?initial_date=2020-11-01&final_date=2020-10-12",
+							"raw": "{{root_route_logs}}?initial_date=2023-03-23&final_date=2020-03-22",
 							"host": [
-								"{{root_route}}"
+								"{{root_route_logs}}"
 							],
 							"query": [
 								{
@@ -1273,17 +1235,17 @@
 									"disabled": true
 								},
 								{
-									"key": "initial_date",
-									"value": "2020-11-01"
-								},
-								{
-									"key": "final_date",
-									"value": "2020-10-12"
-								},
-								{
 									"key": "log_type",
 									"value": "AUTH",
 									"disabled": true
+								},
+								{
+									"key": "initial_date",
+									"value": "2023-03-23"
+								},
+								{
+									"key": "final_date",
+									"value": "2020-03-22"
 								}
 							]
 						}
@@ -1328,9 +1290,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{root_route}}?page=1&per_page=4&initial_date=2020-10-10&log_type=INFO",
+							"raw": "{{root_route_logs}}?page=1&per_page=4&initial_date=2020-10-10&log_type=INFO",
 							"host": [
-								"{{root_route}}"
+								"{{root_route_logs}}"
 							],
 							"query": [
 								{
@@ -1395,9 +1357,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{root_route}}/{{application}}",
+							"raw": "{{root_route_logs}}/{{application}}",
 							"host": [
-								"{{root_route}}"
+								"{{root_route_logs}}"
 							],
 							"path": [
 								"{{application}}"
@@ -1495,9 +1457,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{root_route}}",
+							"raw": "{{root_route_logs}}",
 							"host": [
-								"{{root_route}}"
+								"{{root_route_logs}}"
 							],
 							"query": [
 								{
@@ -1589,9 +1551,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{root_route}}",
+							"raw": "{{root_route_logs}}",
 							"host": [
-								"{{root_route}}"
+								"{{root_route_logs}}"
 							],
 							"query": [
 								{
@@ -1619,6 +1581,595 @@
 									"value": "AUTH",
 									"disabled": true
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "profiles",
+			"item": [
+				{
+					"name": "Login-User-For_Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"pm.environment.set(\"id-loguedin\", responseData.id_user);",
+									"pm.environment.set(\"token\", responseData.token);",
+									"",
+									"pm.test(\"El codigo de estado de respuesta debe ser 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"pm.test(\"La respuesta tiene los campos obligatorios 'id_user' and 'token'\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.id_user).to.exist.and.to.be.a('number');",
+									"    pm.expect(responseData.token).to.exist.and.to.be.a('string');",
+									"});",
+									"",
+									"",
+									"pm.test(\"'id_user' es un numero entero no negativo\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.id_user).to.be.a('number');",
+									"    pm.expect(responseData.id_user).to.be.at.least(0);",
+									"});",
+									"",
+									"",
+									"pm.test(\"'Token' es una cadena no vacia\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.token).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Token should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"El tiempo de respuesta es inferior a 500ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"clave\": \"maria\",\r\n  \"email\": \"maria@example.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{root_route_users}}/tokens",
+							"host": [
+								"{{root_route_users}}"
+							],
+							"path": [
+								"tokens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get-All-Profiles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response is an array with at least one element\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"    pm.expect(responseData).to.have.lengthOf.at.least(1);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"ID is a non-negative integer\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"    \r",
+									"    responseData.forEach(function(profile) {\r",
+									"        pm.expect(profile.id).to.be.a('number').and.to.be.greaterThan(-1);\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Apodo is a non-empty string\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"\r",
+									"  pm.expect(responseData).to.be.an('array');\r",
+									"  \r",
+									"  responseData.forEach(function(profile) {\r",
+									"    pm.expect(profile.apodo).to.be.a('string').and.to.have.lengthOf.at.least(1);\r",
+									"  });\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Informacion publica is either 0 or 1\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"    \r",
+									"    responseData.forEach(function (profile) {\r",
+									"        pm.expect(profile.informacion_publica).to.be.oneOf([0, 1]);\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{root_route_profiles}}",
+							"host": [
+								"{{root_route_profiles}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get-Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the 'id' field\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.id).to.exist.and.to.be.a('number');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the 'url_pagina' field\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.url_pagina).to.exist.and.to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the 'apodo' field\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData).to.be.an('object');\r",
+									"  pm.expect(responseData.apodo).to.exist.and.to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the informacion_publica field\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData).to.be.an('object');\r",
+									"  pm.expect(responseData.informacion_publica).to.exist;\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{root_route_profiles}}/2",
+							"host": [
+								"{{root_route_profiles}}"
+							],
+							"path": [
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get-Profile-Fail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response has the required field - mensaje\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.mensaje).to.exist;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Mensaje is a non-empty string\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData.mensaje).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response status code is 404\", function () {\r",
+									"  pm.expect(pm.response.code).to.equal(404);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response does not have any additional fields other than 'mensaje'\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(Object.keys(responseData)).to.have.lengthOf(1, \"Response should only have one field\");\r",
+									"    pm.expect(responseData).to.have.property('mensaje');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{root_route_profiles}}/1000",
+							"host": [
+								"{{root_route_profiles}}"
+							],
+							"path": [
+								"1000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update-Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.mensaje).to.exist.and.to.be.a('string');\r",
+									"    pm.expect(responseData.detalles).to.exist.and.to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Mensaje is a non-empty string\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData.mensaje).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Detalles is a non-empty string\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData.detalles).to.exist.and.to.be.a('string');\r",
+									"  pm.expect(responseData.detalles).to.not.be.empty;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is in an acceptable range\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(500);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"url_pagina\": \"marianela.com\",\r\n    \"apodo\": \"Marianela321\",\r\n    \"informacion_publica\": 1,\r\n    \"direccion_correspondencia\": \"Av. Principal #45\",\r\n    \"biografia\": \"Marilu es una apasionada de la mÃºsica y le encanta viajar.\",\r\n    \"organizacion\": \"MusicCorp\",\r\n    \"pais\": \"Alemania\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{root_route_profiles}}/2",
+							"host": [
+								"{{root_route_profiles}}"
+							],
+							"path": [
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create-Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required fields - mensaje and detalles\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData).to.be.an('object');\r",
+									"  pm.expect(responseData.mensaje).to.exist;\r",
+									"  pm.expect(responseData.detalles).to.exist;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Mensaje is a non-empty string\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData.mensaje).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Mensaje should not be empty\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Detalles is a non-empty string\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData).to.be.an('object');\r",
+									"  pm.expect(responseData.detalles).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is in an acceptable range\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000); // Assuming an acceptable range is below 1000ms\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 100,\r\n    \"nombre\": \"Sebas\",\r\n    \"apellido\": \"Burgos\",\r\n    \"email\": \"sebastianburgos@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{root_route_profiles}}",
+							"host": [
+								"{{root_route_profiles}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update-Profile-Fail-Auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response status code is 401\", function () {\r",
+									"  pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required field 'mensaje'\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.mensaje).to.exist;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"The 'mensaje' field is a non-empty string\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.mensaje).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"url_pagina\": \"marianela.com\",\r\n    \"apodo\": \"Marianela321\",\r\n    \"informacion_publica\": 1,\r\n    \"direccion_correspondencia\": \"Av. Principal #45\",\r\n    \"biografia\": \"Marilu es una apasionada de la mÃºsica y le encanta viajar.\",\r\n    \"organizacion\": \"MusicCorp\",\r\n    \"pais\": \"Alemania\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{root_route_profiles}}/2",
+							"host": [
+								"{{root_route_profiles}}"
+							],
+							"path": [
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update-Profile-Fail-Not-Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response status code is 401\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(401);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required fields - mensaje and detalles\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.mensaje).to.exist.and.to.be.a('string');\r",
+									"    pm.expect(responseData.detalles).to.exist.and.to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Mensaje is a non-empty string\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData.mensaje).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Mensaje should not be empty\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Detalles is a non-empty string\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"\r",
+									"  pm.expect(responseData.detalles).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"url_pagina\": \"marianela.com\",\r\n    \"apodo\": \"Marianela321\",\r\n    \"informacion_publica\": 1,\r\n    \"direccion_correspondencia\": \"Av. Principal #45\",\r\n    \"biografia\": \"Marilu es una apasionada de la mÃºsica y le encanta viajar.\",\r\n    \"organizacion\": \"MusicCorp\",\r\n    \"pais\": \"Alemania\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{root_route_profiles}}/1000",
+							"host": [
+								"{{root_route_profiles}}"
+							],
+							"path": [
+								"1000"
 							]
 						}
 					},
