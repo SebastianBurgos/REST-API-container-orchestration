@@ -1,0 +1,50 @@
+{
+    "type": "object",
+    "properties": {
+      "ACCION": {
+        "type": "string",
+        "description": "Acción realizada en la solicitud"
+      },
+      "APLICACION": {
+        "type": "string",
+        "description": "Nombre de la aplicación"
+      },
+      "FECHA": {
+        "type": "string",
+        "format": "date-time",
+        "example": "2023-10-03 15:39:14.861564",
+        "description": "Fecha y hora del registro (en el formato 'YYYY-MM-DD HH:MM:SS.SSSSSS')"
+      },
+      "IP": {
+        "type": "string",
+        "example":"172.18.0.1",
+        "description": "Dirección IP del cliente"
+      },
+      "METODO-HTTP": {
+        "type": "string",
+        "description": "Método HTTP utilizado para la solicitud"
+      },
+      "MODULO": {
+        "type": "string",
+        "description": "Módulo de la aplicación"
+      },
+      "RUTA": {
+        "type": "string",
+        "description": "Ruta de acceso"
+      },
+      "TIPO-LOG": {
+        "type": "string",
+        "description": "Tipo de log"
+      },
+      "TOKEN": {
+        "type": "string",
+        "description": "Token de autenticación (puede ser 'NO TOKEN')"
+      },
+      "USUARIO-AUTENTICADO": {
+        "type": "string",
+        "description": "Nombre de usuario autenticado (puede ser 'GUEST')"
+      }
+    },
+    "required": ["ACCION", "APLICACION", "FECHA", "IP", "METODO-HTTP", "MODULO", "RUTA", "TIPO-LOG"]
+  }
+  

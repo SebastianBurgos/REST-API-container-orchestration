@@ -1,0 +1,42 @@
+{
+    "type": "object",
+    "properties": {
+      "page": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1000,
+        "format": "int32"
+      },
+      "per_page": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1000,
+        "format": "int32" 
+      },
+      "initial_date": {
+        "type": "string",
+        "maxLength": 10,
+        "format": "date",
+        "example": "1990-01-01"
+      },
+      "final_date": {
+        "type": "string",
+        "maxLength": 10,
+        "format": "date",
+        "example": "1990-01-01"
+      },
+      "log_type": {
+        "type": "string",
+        "description": "Tipo de registro de logs filtrado"
+      },
+      "logs": {
+        "type": "object",
+            "properties": {
+                "schema": {
+                    "$ref": "./Logs.json"
+                }
+            },
+            "additionalProperties": false
+        }
+    }    
+}
