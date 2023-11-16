@@ -3,6 +3,7 @@ import jwt
 import mysql.connector
 import requests
 from modules.database import db
+from modules.rabbitmqservice import enviar_mensaje_profiles    
 
 # Clave secreta para la generación y verificación de tokens JWT
 SECRET_KEY = os.environ.get("SECRET_KEY")
@@ -33,8 +34,11 @@ def evento_crear_perfil(usuario_id):
             "email": usuario_datos["email"]
         }
 
+        # Imprime los datos del usuario en formato JSON
+        print("Datos del usuario evento crear profile automatico: ", usuario_json)
+
         # Llama a la función para enviar la solicitud POST
-        enviar_solicitud_post(usuario_json)
+        enviar_mensaje_profiles(usuario_json)
 
     except mysql.connector.Error as err:
         print("Error en el evento crear perfil: ", err)
@@ -45,17 +49,5 @@ def obtener_usuario_por_id(usuario_id):
     values = (usuario_id,)
     cursor.execute(query, values)
     usuario_datos = cursor.fetchone()
+    cursor.close()
     return usuario_datos
-
-def enviar_solicitud_post(usuario_json):
-    url = "http://profiles_api:4000/profiles"
-
-    # Realiza la solicitud POST con los datos del usuario como JSON
-    response = requests.post(url, json=usuario_json)
-
-    # Verifica el código de estado de la respuesta
-    if response.status_code == 201:
-        print("Perfil creado exitosamente.")
-    else:
-        print(f"Error al crear el perfil. Código de estado: {response.status_code}")
-

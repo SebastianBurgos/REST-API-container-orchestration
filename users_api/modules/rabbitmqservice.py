@@ -1,6 +1,7 @@
 import time
 import os
 import pika
+import json
 
 def esperar_rabbitmq():
     while True:
@@ -15,12 +16,23 @@ def esperar_rabbitmq():
 
 gestormensajes = esperar_rabbitmq()
 
-channel = gestormensajes.channel()
-# Declarar una cola
-channel.queue_declare(queue='logs', durable=True)
+channel_logs = gestormensajes.channel()
+# Declarar una cola para logs
+channel_logs.queue_declare(queue='logs', durable=True)
 
-# Declaramos la función para envio de mensajes
-def enviar_mensaje(tipo_log, metodo, ruta, modulo, app, fecha, ip, usuario_autenticado, token, mensaje):
-    bodymensaje = tipo_log+"#"+metodo+"#"+ruta+"#"+modulo+"#"+app+"#"+fecha+"#"+ip+"#"+usuario_autenticado+"#"+token+"#"+mensaje
-    channel.basic_publish(exchange='', routing_key='logs', body=bodymensaje)
-    print(f"Mensaje enviado: ID: {ip}\nMensaje: {mensaje}")
+channel_profiles = gestormensajes.channel()
+# Declarar una cola para perfiles
+channel_profiles.queue_declare(queue='profiles', durable=True)
+
+# Función para enviar mensajes a la cola de perfiles
+def enviar_mensaje_profiles(usuario_json):
+    # Serializar el objeto JSON a cadena antes de enviarlo
+    mensaje = json.dumps(usuario_json)
+    channel_profiles.basic_publish(exchange='', routing_key='profiles', body=mensaje)
+    print(f"Mensaje enviado a la cola de profiles: ID: {usuario_json['id']}\nMensaje: {usuario_json}")
+
+# Función original para enviar mensajes a la cola de logs
+def enviar_mensaje_logs(tipo_log, metodo, ruta, modulo, app, fecha, ip, usuario_autenticado, token, mensaje):
+    bodymessage = tipo_log+"#"+metodo+"#"+ruta+"#"+modulo+"#"+app+"#"+fecha+"#"+ip+"#"+usuario_autenticado+"#"+token+"#"+mensaje
+    channel_logs.basic_publish(exchange='', routing_key='logs', body=bodymessage)
+    print(f"Mensaje enviado a la cola de logs: ID: {ip}\nMensaje: {mensaje}")

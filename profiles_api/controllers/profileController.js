@@ -48,7 +48,7 @@ export const getProfile = async (req, res) => {
     }
 }
 
-// Actualizar el perfil de un usuario
+// Crear el perfil de un usuario
 export const createProfile = async (req, res) => {
     try {
         const { id, nombre, apellido, email } = req.body;

@@ -1,6 +1,6 @@
 import mysql from "mysql2/promise";
 
-const crearConexion = async () => {
+export const crearConexion = async () => {
     try {
         const conexion = await mysql.createConnection({
             host: process.env.MYSQL_SERVICE,

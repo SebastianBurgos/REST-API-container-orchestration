@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from app import app
 from flask import request, jsonify
 from modules.database import db
-from modules.rabbitmqservice import enviar_mensaje
+from modules.rabbitmqservice import enviar_mensaje_logs
 from modules.utils import validar_token, evento_crear_perfil
 
 # Clave secreta para la generación y verificación de tokens JWT
@@ -60,7 +60,7 @@ def get_users():
         application = "USERS_API_REST"
         usuario_autenticado = "GUEST"
         token = "NO TOKEN"
-        enviar_mensaje(tipo_log, metodo, ruta, modulo, application, fecha, ip, usuario_autenticado, token, mensaje)
+        enviar_mensaje_logs(tipo_log, metodo, ruta, modulo, application, fecha, ip, usuario_autenticado, token, mensaje)
 
         if any(users):
             return jsonify(response), 200
@@ -107,7 +107,7 @@ def register_user():
         application = "USERS_API_REST"
         usuario_autenticado = "USUARIO REGISTRADO: "+nombre+" "+apellido
         token = "NO TOKEN"
-        enviar_mensaje(tipo_log, metodo, ruta, modulo, application, fecha, ip, usuario_autenticado, token, mensaje)
+        enviar_mensaje_logs(tipo_log, metodo, ruta, modulo, application, fecha, ip, usuario_autenticado, token, mensaje)
         evento_crear_perfil(usuario_id)
 
         return jsonify({"message": "Usuario registrado exitosamente"}), 201
@@ -263,7 +263,7 @@ def login_user():
             application = "USERS_API_REST"
             usuario_autenticado = "[ID: "+str(user['id'])+"] "+user['nombre']+" "+user['apellido']
 
-            enviar_mensaje(tipo_log, metodo, ruta, modulo, application, fecha, ip, usuario_autenticado, token, mensaje)
+            enviar_mensaje_logs(tipo_log, metodo, ruta, modulo, application, fecha, ip, usuario_autenticado, token, mensaje)
 
             return jsonify({"token": token,
                             "id_user": user['id']}), 200

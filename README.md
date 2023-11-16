@@ -29,4 +29,6 @@ This Docker Compose orchestration system is designed to streamline the deploymen
 To deploy this system, make sure you are in the root directory containing the `docker-compose.yml` file. Then, execute the following command:
 
 ```bash
-docker-compose up
+docker compose up
+```
+
