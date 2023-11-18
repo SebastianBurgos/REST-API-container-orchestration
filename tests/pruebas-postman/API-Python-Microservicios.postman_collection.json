@@ -10,197 +10,6 @@
 			"name": "users",
 			"item": [
 				{
-					"name": "get_users",
-					"item": [
-						{
-							"name": "Get-User-List",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"\r",
-											"pm.test(\"El codigo de estado de respuesta debe ser 200\", function () {\r",
-											"    pm.expect(pm.response.code).to.equal(200);\r",
-											"});\r",
-											"\r",
-											"\r",
-											"pm.test(\"Validar la 'page' predeterminada en la respuesta\", function () {\r",
-											"    const responseData = pm.response.json();\r",
-											"\r",
-											"    pm.expect(responseData).to.be.an('object');\r",
-											"    pm.expect(responseData.page).to.exist;\r",
-											"});\r",
-											"\r",
-											"\r",
-											"pm.test(\"Validar el campo 'per_page' predeterminado en la respuesta\", function () {\r",
-											"    const responseData = pm.response.json();\r",
-											"\r",
-											"    pm.expect(responseData).to.be.an('object');\r",
-											"    pm.expect(responseData.per_page).to.exist.and.to.be.a('number');\r",
-											"});\r",
-											"\r",
-											"\r",
-											"pm.test(\"El arreglo de usuarios debe estar presente y no puede ser nulo\", function () {\r",
-											"    const responseData = pm.response.json();\r",
-											"\r",
-											"    pm.expect(responseData.users).to.exist;\r",
-											"    pm.expect(responseData.users).to.be.an('array').that.exist;\r",
-											"});\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{root_route_users}}/users?page=4&per_page=5",
-									"host": [
-										"{{root_route_users}}"
-									],
-									"path": [
-										"users"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "4"
-										},
-										{
-											"key": "per_page",
-											"value": "5"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get-User-Is-None",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"\r",
-											"pm.test(\"El codido de estado de respuesta debe ser 404\", function () {\r",
-											"    pm.expect(pm.response.code).to.equal(404);\r",
-											"});\r",
-											"\r",
-											"\r",
-											"pm.test(\"Validar el campo de error en la respuesta.\", function () {\r",
-											"    const responseData = pm.response.json();\r",
-											"\r",
-											"    pm.expect(responseData).to.be.an('object');\r",
-											"});\r",
-											"\r",
-											"pm.test(\"El tiempo de respuesta debe ser menor a 500ms\", function () {\r",
-											"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{root_route_users}}/users?page=1000&per_page=1002",
-									"host": [
-										"{{root_route_users}}"
-									],
-									"path": [
-										"users"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "1000"
-										},
-										{
-											"key": "per_page",
-											"value": "1002"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get-User-Search-Name",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"\r",
-											"pm.test(\"El codigo de estado de respuesta debe ser 200\", function () {\r",
-											"    pm.expect(pm.response.code).to.equal(200);\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Validar la 'page' y el campo 'per_page'\", function () {\r",
-											"    const responseData = pm.response.json();\r",
-											"\r",
-											"    pm.expect(responseData).to.be.an('object');\r",
-											"    pm.expect(responseData.page).to.exist.and.to.be.a('number');\r",
-											"    pm.expect(responseData.per_page).to.exist.and.to.be.a('number');\r",
-											"});\r",
-											"\r",
-											"var responseJSON = pm.response.json();\r",
-											"\r",
-											"// Test the response body structure and values\r",
-											"pm.test(\"Verificar si la estrctura de cuerpo de respuesta es valida\", function () {\r",
-											"    pm.expect(responseJSON).has.property('page');\r",
-											"    pm.expect(responseJSON).has.property('per_page');\r",
-											"    pm.expect(responseJSON).has.property('search_name');\r",
-											"    pm.expect(responseJSON).has.property('users');\r",
-											"});\r",
-											"\r",
-											"// checking that each user object has the required properties\r",
-											"pm.test(\"Verfificar si la estructura del objeto Usuario es valida\", function () {\r",
-											"    responseJSON.users.forEach((user) => {\r",
-											"        pm.expect(user).has.property('id');\r",
-											"        pm.expect(user).has.property('nombre');\r",
-											"        pm.expect(user).has.property('apellido');\r",
-											"        pm.expect(user).has.property('clave');\r",
-											"        pm.expect(user).has.property('creado_en');\r",
-											"        pm.expect(user).has.property('email');\r",
-											"        pm.expect(user).has.property('fecha_nacimiento');\r",
-											"    });\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{root_route_users}}/users?search_name=juan",
-									"host": [
-										"{{root_route_users}}"
-									],
-									"path": [
-										"users"
-									],
-									"query": [
-										{
-											"key": "search_name",
-											"value": "juan"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
 					"name": "register_user",
 					"item": [
 						{
@@ -210,6 +19,8 @@
 									"listen": "test",
 									"script": {
 										"exec": [
+											"const responseData = pm.response.json();\r",
+											"pm.environment.set(\"id-registered\", responseData.id_user);\r",
 											"\r",
 											"pm.test(\"El codigo de estado de respuesta debe ser 201\", function () {\r",
 											"    pm.expect(pm.response.code).to.equal(201);\r",
@@ -400,10 +211,203 @@
 					]
 				},
 				{
+					"name": "get_users",
+					"item": [
+						{
+							"name": "Get-User-List",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"pm.test(\"El codigo de estado de respuesta debe ser 200\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(200);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Validar la 'page' predeterminada en la respuesta\", function () {\r",
+											"    const responseData = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseData).to.be.an('object');\r",
+											"    pm.expect(responseData.page).to.exist;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Validar el campo 'per_page' predeterminado en la respuesta\", function () {\r",
+											"    const responseData = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseData).to.be.an('object');\r",
+											"    pm.expect(responseData.per_page).to.exist.and.to.be.a('number');\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"El arreglo de usuarios debe estar presente y no puede ser nulo\", function () {\r",
+											"    const responseData = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseData.users).to.exist;\r",
+											"    pm.expect(responseData.users).to.be.an('array').that.exist;\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{root_route_users}}/users",
+									"host": [
+										"{{root_route_users}}"
+									],
+									"path": [
+										"users"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "4",
+											"disabled": true
+										},
+										{
+											"key": "per_page",
+											"value": "5",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get-User-Is-None",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"pm.test(\"El codido de estado de respuesta debe ser 404\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(404);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Validar el campo de error en la respuesta.\", function () {\r",
+											"    const responseData = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseData).to.be.an('object');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"El tiempo de respuesta debe ser menor a 500ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{root_route_users}}/users?page=1000&per_page=1002",
+									"host": [
+										"{{root_route_users}}"
+									],
+									"path": [
+										"users"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1000"
+										},
+										{
+											"key": "per_page",
+											"value": "1002"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get-User-Search-Name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"pm.test(\"El codigo de estado de respuesta debe ser 200\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validar la 'page' y el campo 'per_page'\", function () {\r",
+											"    const responseData = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseData).to.be.an('object');\r",
+											"    pm.expect(responseData.page).to.exist.and.to.be.a('number');\r",
+											"    pm.expect(responseData.per_page).to.exist.and.to.be.a('number');\r",
+											"});\r",
+											"\r",
+											"var responseJSON = pm.response.json();\r",
+											"\r",
+											"// Test the response body structure and values\r",
+											"pm.test(\"Verificar si la estrctura de cuerpo de respuesta es valida\", function () {\r",
+											"    pm.expect(responseJSON).has.property('page');\r",
+											"    pm.expect(responseJSON).has.property('per_page');\r",
+											"    pm.expect(responseJSON).has.property('search_name');\r",
+											"    pm.expect(responseJSON).has.property('users');\r",
+											"});\r",
+											"\r",
+											"// checking that each user object has the required properties\r",
+											"pm.test(\"Verfificar si la estructura del objeto Usuario es valida\", function () {\r",
+											"    responseJSON.users.forEach((user) => {\r",
+											"        pm.expect(user).has.property('id');\r",
+											"        pm.expect(user).has.property('nombre');\r",
+											"        pm.expect(user).has.property('apellido');\r",
+											"        pm.expect(user).has.property('clave');\r",
+											"        pm.expect(user).has.property('creado_en');\r",
+											"        pm.expect(user).has.property('email');\r",
+											"        pm.expect(user).has.property('fecha_nacimiento');\r",
+											"    });\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{root_route_users}}/users?search_name=Pedronel",
+									"host": [
+										"{{root_route_users}}"
+									],
+									"path": [
+										"users"
+									],
+									"query": [
+										{
+											"key": "search_name",
+											"value": "Pedronel"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "post_login",
 					"item": [
 						{
-							"name": "Login-User",
+							"name": "Auth-User",
 							"event": [
 								{
 									"listen": "test",
@@ -465,19 +469,19 @@
 									}
 								},
 								"url": {
-									"raw": "{{root_route_users}}/tokens",
+									"raw": "{{root_route_users}}/auth",
 									"host": [
 										"{{root_route_users}}"
 									],
 									"path": [
-										"tokens"
+										"auth"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Login-User-Invalid",
+							"name": "Auth-User-Invalid",
 							"event": [
 								{
 									"listen": "test",
@@ -529,12 +533,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{root_route_users}}/tokens",
+									"raw": "{{root_route_users}}/auth",
 									"host": [
 										"{{root_route_users}}"
 									],
 									"path": [
-										"tokens"
+										"auth"
 									]
 								}
 							},
@@ -727,12 +731,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{root_route_users}}/users",
+									"raw": "{{root_route_users}}/users/{{id-loguedin}}",
 									"host": [
 										"{{root_route_users}}"
 									],
 									"path": [
-										"users"
+										"users",
+										"{{id-loguedin}}"
 									]
 								}
 							},
@@ -806,12 +811,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{root_route_users}}/users",
+									"raw": "{{root_route_users}}/users/{{id-loguedin}}",
 									"host": [
 										"{{root_route_users}}"
 									],
 									"path": [
-										"users"
+										"users",
+										"{{id-loguedin}}"
 									]
 								}
 							},
@@ -883,13 +889,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{root_route_users}}/users/user/new-password",
+									"raw": "{{root_route_users}}/users/{{id-loguedin}}/new-password",
 									"host": [
 										"{{root_route_users}}"
 									],
 									"path": [
 										"users",
-										"user",
+										"{{id-loguedin}}",
 										"new-password"
 									]
 								}
@@ -959,14 +965,73 @@
 									}
 								},
 								"url": {
-									"raw": "{{root_route_users}}/users/user/new-password",
+									"raw": "{{root_route_users}}/users/{{id-loguedin}}/new-password",
 									"host": [
 										"{{root_route_users}}"
 									],
 									"path": [
 										"users",
-										"user",
+										"{{id-loguedin}}",
 										"new-password"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "password-reset",
+					"item": [
+						{
+							"name": "Password-Reset-Fail",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"email_no_registrado\",\r\n    \"clave\": \"xd\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{root_route_users}}/auth/password-reset",
+									"host": [
+										"{{root_route_users}}"
+									],
+									"path": [
+										"auth",
+										"password-reset"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Password-Reset",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": {{email-registered}},\r\n    \"clave\": {{clave-registered}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{root_route_users}}/auth/password-reset",
+									"host": [
+										"{{root_route_users}}"
+									],
+									"path": [
+										"auth",
+										"password-reset"
 									]
 								}
 							},
@@ -1035,12 +1100,13 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{root_route_users}}/users",
+									"raw": "{{root_route_users}}/users/{{id-loguedin}}",
 									"host": [
 										"{{root_route_users}}"
 									],
 									"path": [
-										"users"
+										"users",
+										"{{id-loguedin}}"
 									]
 								}
 							},
@@ -1102,12 +1168,13 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{root_route_users}}/users",
+									"raw": "{{root_route_users}}/users/{{id-loguedin}}",
 									"host": [
 										"{{root_route_users}}"
 									],
 									"path": [
-										"users"
+										"users",
+										"{{id-loguedin}}"
 									]
 								}
 							},
@@ -1329,24 +1396,26 @@
 							"script": {
 								"exec": [
 									"\r",
-									"pm.test(\"Response status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
+									"pm.test(\"Response status code is 404\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(404);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Logs array is present and contains at least one log entry\", function () {\r",
+									"\r",
+									"pm.test(\"Verify that the 'error' field is present in the response\", function () {\r",
 									"    const responseData = pm.response.json();\r",
 									"    \r",
-									"    pm.expect(responseData.logs).to.exist.and.to.be.an('array');\r",
-									"    pm.expect(responseData.logs.length).to.be.at.least(1, \"Logs array should contain at least one entry\");\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.error).to.exist;\r",
 									"});\r",
 									"\r",
 									"\r",
-									"pm.test(\"Page value is a non-negative integer\", function () {\r",
+									"pm.test(\"The error field should be a non-empty string\", function () {\r",
 									"    const responseData = pm.response.json();\r",
-									"    \r",
-									"    pm.expect(responseData.page).to.be.a('number');\r",
-									"    pm.expect(responseData.page).to.be.at.least(0, \"Page value should be non-negative\");\r",
+									"\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.error).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"The error field should not be empty\");\r",
 									"});\r",
+									"\r",
 									""
 								],
 								"type": "text/javascript"
@@ -1592,7 +1661,67 @@
 			"name": "profiles",
 			"item": [
 				{
-					"name": "Login-User-For_Profile",
+					"name": "Register-User Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"El codigo de estado de respuesta debe ser 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La respuesta tiene el campo 'mensaje'\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.message).to.exist.and.to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"El mensaje no viene vacio\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"El tiempo de respuesta es inferior a 500ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"apellido\": \"{{apellido-registered}}\",\r\n  \"fecha_nacimiento\": \"{{fecha-nacimiento-registered}}\",\r\n  \"email\": \"{{email-registered}}\",\r\n  \"nombre\": \"{{nombre-registered}}\",\r\n  \"clave\": \"{{clave-registered}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{root_route_users}}/users",
+							"host": [
+								"{{root_route_users}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login-User-For-Profile",
 					"event": [
 						{
 							"listen": "test",
@@ -1646,7 +1775,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"clave\": \"maria\",\r\n  \"email\": \"maria@example.com\"\r\n}",
+							"raw": "{\r\n  \"clave\": \"{{clave-registered}}\",\r\n  \"email\": \"{{email-registered}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1654,12 +1783,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{root_route_users}}/tokens",
+							"raw": "{{root_route_users}}/auth",
 							"host": [
 								"{{root_route_users}}"
 							],
 							"path": [
-								"tokens"
+								"auth"
 							]
 						}
 					},
@@ -1946,90 +2075,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{root_route_profiles}}/2",
+							"raw": "{{root_route_profiles}}/{{id-loguedin}}",
 							"host": [
 								"{{root_route_profiles}}"
 							],
 							"path": [
-								"2"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create-Profile",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"\r",
-									"pm.test(\"Response status code is 200\", function () {\r",
-									"  pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"\r",
-									"pm.test(\"Response has the required fields - mensaje and detalles\", function () {\r",
-									"  const responseData = pm.response.json();\r",
-									"  \r",
-									"  pm.expect(responseData).to.be.an('object');\r",
-									"  pm.expect(responseData.mensaje).to.exist;\r",
-									"  pm.expect(responseData.detalles).to.exist;\r",
-									"});\r",
-									"\r",
-									"\r",
-									"pm.test(\"Mensaje is a non-empty string\", function () {\r",
-									"  const responseData = pm.response.json();\r",
-									"  \r",
-									"  pm.expect(responseData.mensaje).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Mensaje should not be empty\");\r",
-									"});\r",
-									"\r",
-									"\r",
-									"pm.test(\"Detalles is a non-empty string\", function () {\r",
-									"  const responseData = pm.response.json();\r",
-									"  \r",
-									"  pm.expect(responseData).to.be.an('object');\r",
-									"  pm.expect(responseData.detalles).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
-									"});\r",
-									"\r",
-									"\r",
-									"pm.test(\"Response time is in an acceptable range\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(1000); // Assuming an acceptable range is below 1000ms\r",
-									"});\r",
-									"\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"id\": 100,\r\n    \"nombre\": \"Sebas\",\r\n    \"apellido\": \"Burgos\",\r\n    \"email\": \"sebastianburgos@gmail.com\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{root_route_profiles}}",
-							"host": [
-								"{{root_route_profiles}}"
+								"{{id-loguedin}}"
 							]
 						}
 					},
@@ -2170,6 +2221,331 @@
 							],
 							"path": [
 								"1000"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "gateway",
+			"item": [
+				{
+					"name": "Register-Gateway",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response status code is 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(201);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required field - message\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"\r",
+									"  pm.expect(responseData).to.be.an('object');\r",
+									"  pm.expect(responseData.message).to.exist.and.to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Message is a non-empty string\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.message).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 500ms\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(500);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"apellido\": \"{{apellido-registered}}\",\r\n  \"fecha_nacimiento\": \"{{fecha-nacimiento-registered}}\",\r\n  \"email\": \"{{email-registered}}\",\r\n  \"nombre\": \"{{nombre-registered}}\",\r\n  \"clave\": \"{{clave-registered}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{root_route_gateway}}/register",
+							"host": [
+								"{{root_route_gateway}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register-Gateway-Fail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response status code is 400\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Error field is present in the response\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData).to.be.an('object');\r",
+									"  pm.expect(responseData.error).to.exist;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Error field is a non-empty string\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData.error).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"apellido\": \"{{apellido-registered}}\",\r\n  \"fecha_nacimiento\": \"{{fecha-nacimiento-registered}}\",\r\n  \"email\": \"{{email-registered}}\",\r\n  \"nombre\": \"{{nombre-registered}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{root_route_gateway}}/register",
+							"host": [
+								"{{root_route_gateway}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Auth-Gateway",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();\r",
+									"pm.environment.set(\"id-registered\", responseData.id_user);\r",
+									"pm.environment.set(\"token\", responseData.token);\r",
+									"\r",
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required fields - id_user and token\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.id_user).to.exist;\r",
+									"    pm.expect(responseData.token).to.exist;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Id_user is a non-negative integer\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.id_user).to.be.a('number');\r",
+									"    pm.expect(responseData.id_user).to.be.at.least(0);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Token is a non-empty string\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.token).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Token should not be empty\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"clave\": \"{{clave-registered}}\",\r\n  \"email\": \"{{email-registered}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{root_route_gateway}}/auth",
+							"host": [
+								"{{root_route_gateway}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Auth-Gateway-Fail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response status code is 401\", function () {\r",
+									"  pm.expect(pm.response.code).to.equal(401);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Verify that the 'error' field is present in the response\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData).to.be.an('object');\r",
+									"  pm.expect(responseData.error).to.exist;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Verify that the 'error' field is a non-empty string\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData.error).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"clave\": \"ninguna\",\r\n  \"email\": \"{{email-registered}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{root_route_gateway}}/auth",
+							"host": [
+								"{{root_route_gateway}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete-User Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"El codigo de estado de respuesta debe ser 200\", function () {",
+									"  pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"La respuesta tiene el campo 'mensaje'\", function () {",
+									"  const responseData = pm.response.json();",
+									"",
+									"  pm.expect(responseData.message).to.exist.and.to.be.a('string');",
+									"});",
+									"",
+									"",
+									"pm.test(\"El mensaje es un string no vacio\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.message).to.be.a('string');",
+									"    pm.expect(responseData.message).to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"El tiempo de respuesta es inferior a 500ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Verificar si el usuario fue borrado de la base de datos\", function () {",
+									"  pm.expect(pm.response.code).to.equal(200);",
+									"  pm.expect(pm.response.json().message).to.equal(\"Usuario eliminado exitosamente\");",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{root_route_users}}/users/{{id-loguedin}}",
+							"host": [
+								"{{root_route_users}}"
+							],
+							"path": [
+								"users",
+								"{{id-loguedin}}"
 							]
 						}
 					},

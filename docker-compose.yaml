@@ -66,7 +66,6 @@ services:
       RABBITMQ_SERVICE: rabbitmq
       SERVICE_NAME: users_api
       SECRET_KEY: microcevichesecretkey@2011
-      PROFILES_API_URL: http://profiles_api:4000
     volumes:
       - ./users_api:/app
     restart: always
@@ -91,6 +90,21 @@ services:
       SECRET_KEY: microcevichesecretkey@2011
     volumes:
       - ./profiles_api:/home/node/app
+    restart: always
+    networks:
+      - system_network
+
+  gateway_api:
+    build:
+      context: ./gateway_api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - users_api
+    environment:
+      RABBITMQ_SERVICE: rabbitmq
+      SERVICE_NAME: gateway_api
+      USERS_API_URL: "http://users_api:5000"
     restart: always
     networks:
       - system_network

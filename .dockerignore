@@ -1,8 +1,8 @@
 /users_api/__pycache__/
 /users_api/Dockerfile
-/test/
 /profiles_api/Dockerfile
-/logs_api/Dockerfile/__pycache__/
+/logs_api/Dockerfile
+/logs_api/__pycache__/
 .git
 .gitignore
 .dockerignore

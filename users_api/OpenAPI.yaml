@@ -246,8 +246,76 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/CodigoHTTP' 
+
+  /users/{user_id}:
+    get:
+      summary: Get user by ID
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: ID of the user to retrieve
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 1000
+            format: int32
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Full-User'
+        '401':
+          description: Credenciales invalidas
+          content:
+            application/json:
+              schema:
                 $ref: '#/components/schemas/CodigoHTTP'
-    
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '406':
+          description: Not Acceptable (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '415':
+          description: Unsupported Media Type (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '429':
+          description: Too Many Requests (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '500':
+          description: Error al obtener el usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
     put:
       summary: Update logged in user
       requestBody:
@@ -367,78 +435,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CodigoHTTP'  
+                $ref: '#/components/schemas/CodigoHTTP' 
 
-  /users/{user_id}:
-    get:
-      summary: Get user by ID
-      parameters:
-        - name: user_id
-          in: path
-          required: true
-          description: ID of the user to retrieve
-          schema:
-            type: integer
-            minimum: 0
-            maximum: 1000
-            format: int32
-      responses:
-        '200':
-          description: User details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Full-User'
-        '401':
-          description: Credenciales invalidas
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '404':
-          description: Usuario no encontrado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '406':
-          description: Not Acceptable (en-US)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '415':
-          description: Unsupported Media Type (en-US)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '429':
-          description: Too Many Requests (en-US)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        '500':
-          description: Error al obtener el usuario
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CodigoHTTP'
-
-  /users/user/new-password:
+  /users/{user_id}/new-password:
     patch:
       summary: Change user's password
       requestBody:
@@ -503,9 +502,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/CodigoHTTP'
   
-  /tokens:
+  /auth:
     post:
-      summary: User login
+      summary: User authentication
       requestBody:
         required: true
         content:
@@ -574,7 +573,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/CodigoHTTP'
 
-  /tokens/token-password:
+  /auth/password-reset:
     post:
       summary: Forgot user's password
       requestBody:

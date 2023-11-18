@@ -2,7 +2,6 @@ import requests
 
 URL = "http://localhost:5000"
 
-
 # Obtener una lista de todos los usuarios
 def test_obtener_lista_usuarios():
     # Define el endpoint para obtener la lista de usuarios
@@ -148,8 +147,8 @@ def test_buscar_usuario_por_id():
     assert "email" in data
     assert "fecha_nacimiento" in data
 
-def test_buscar_usuario_por_id_faild():
-    # Define un ID de usuario existente en tu base de datos
+def test_buscar_usuario_por_id_failed():
+    # Define un ID de usuario NO existente en tu base de datos
     user_id = 250
 
     # Define el endpoint para buscar un usuario por su ID
@@ -169,8 +168,11 @@ def test_buscar_usuario_por_id_faild():
 def test_eliminar_cuenta_sin_autenticarse():
     # No se realiza la autenticación y no se obtiene un token JWT
 
-    # Define el endpoint para eliminar la cuenta del usuario (sin autorización)
-    endpoint = "/users"
+    # Define un ID de usuario existente en tu base de datos
+    user_id = 6  # Ajusta el ID según tus necesidades
+
+    # Define el endpoint para buscar un usuario por su ID
+    endpoint = f"/users/{user_id}"
 
     # Realiza la solicitud DELETE a tu API local sin encabezado de autorización
     delete_response = requests.delete(URL + endpoint)
@@ -196,7 +198,6 @@ def test_actualizar_datos_usuario():
     nuevos_datos = {
         "nombre": "Alejandro",
         "apellido": "Armanda"
-
     }
 
     # Define el encabezado de autorización con el token JWT
@@ -204,8 +205,11 @@ def test_actualizar_datos_usuario():
         "Authorization": f"Bearer {token}"
     }
 
+    # Define un ID de usuario existente en tu base de datos
+    user_id = 6
+
     # Define el endpoint para actualizar la información del usuario
-    endpoint = "/users"
+    endpoint = f"/users/{user_id}"
 
     # Realiza la solicitud PUT a tu API local con los nuevos datos y el encabezado de autorización
     put_response = requests.put(URL + endpoint, json=nuevos_datos, headers=headers)
@@ -218,13 +222,13 @@ def test_actualizar_datos_usuario():
     assert "message" in put_data
     assert "Usuario actualizado exitosamente" in put_data["message"]
 
-def obtener_token_jwt(email, clave):
+def autenticacion_token(email, clave):
     # Realiza la autenticación y obtén el token JWT
     auth_payload = {
         "email": email,
         "clave": clave
     }
-    auth_response = requests.post(URL + "/tokens", json=auth_payload)
+    auth_response = requests.post(URL + "/auth", json=auth_payload)
 
     # Verifica que la autenticación sea exitosa y obtén el token
     assert auth_response.status_code == 200
@@ -243,8 +247,11 @@ def test_actualizar_datos_sin_autenticar():
         "apellido": "Puentes"  # Nuevo apellido
     }
 
+    # Define un ID de usuario existente en tu base de datos
+    user_id = 6
+
     # Define el endpoint para actualizar la información del usuario (sin autorización)
-    endpoint = "/users"
+    endpoint = f"/users/{user_id}"
 
     # Realiza la solicitud PUT a tu API local con los nuevos datos sin encabezado de autorización
     put_response = requests.put(URL + endpoint, json=nuevos_datos)
@@ -265,7 +272,7 @@ def test_ingresar_sesion_exitosa():
     }
 
     # Define el endpoint para iniciar sesión
-    endpoint = "/tokens"
+    endpoint = "/auth"
 
     # Realiza la solicitud POST a tu API local con los datos de inicio de sesión
     response = requests.post(URL + endpoint, json=datos_inicio_sesion)
@@ -286,7 +293,7 @@ def test_ingresar_sesion_contraseña_incorrecta():
     }
 
     # Define el endpoint para iniciar sesión
-    endpoint = "/tokens"
+    endpoint = "/auth"
 
     # Realiza la solicitud POST a tu API local con los datos de inicio de sesión incorrectos
     response = requests.post(URL + endpoint, json=datos_inicio_sesion)
@@ -307,7 +314,7 @@ def test_cambiar_contraseña_exitosamente():
     }
 
     # Define el endpoint para iniciar sesión y obtener el token JWT
-    endpoint_sesion = "/tokens"
+    endpoint_sesion = "/auth"
 
     # Realiza la solicitud POST a tu API local para obtener el token JWT
     response_sesion = requests.post(URL + endpoint_sesion, json=datos_inicio_sesion)
@@ -328,8 +335,11 @@ def test_cambiar_contraseña_exitosamente():
         "Authorization": f"Bearer {token}"
     }
 
+    # Define un ID de usuario existente en tu base de datos
+    user_id = 6
+
     # Define el endpoint para cambiar la contraseña
-    endpoint_cambio_contraseña = "/users/user/new-password"
+    endpoint_cambio_contraseña = f"/users/{user_id}/new-password"
 
     # Realiza la solicitud PATCH a tu API local para cambiar la contraseña
     response_cambio_contraseña = requests.patch(URL + endpoint_cambio_contraseña, json=nueva_contraseña, headers=headers)
@@ -350,8 +360,11 @@ def test_cambiar_contraseña_sin_autenticación():
         "nueva_clave": "nueva_contraseña123"  # Nueva contraseña
     }
 
+    # Define un ID de usuario existente en tu base de datos
+    user_id = 6
+
     # Define el endpoint para cambiar la contraseña (sin autorización)
-    endpoint_cambio_contraseña = "/users/user/new-password"
+    endpoint_cambio_contraseña = f"/users/{user_id}/new-password"
 
     # Realiza la solicitud PATCH a tu API local para cambiar la contraseña sin encabezado de autorización
     response_cambio_contraseña = requests.patch(URL + endpoint_cambio_contraseña, json=nueva_contraseña)
@@ -374,7 +387,7 @@ def test_recuperar_contraseña():
     }
 
     # Define el endpoint para solicitar la recuperación de contraseña
-    endpoint_solicitar_recuperación = "/tokens/token-password"
+    endpoint_solicitar_recuperación = "/auth/password-reset"
 
     # Realiza la solicitud POST a tu API local para solicitar la recuperación de contraseña
     response_solicitar_recuperación = requests.post(URL + endpoint_solicitar_recuperación, json=datos_solicitud_recuperación)
@@ -410,8 +423,10 @@ def test_eliminar_cuenta_usuario():
         "Authorization": f"Bearer {token}"
     }
 
+    user_id = 6  # Ajusta el ID según tus necesidades
+
     # Define el endpoint para eliminar la cuenta del usuario autenticado
-    endpoint = "/users"
+    endpoint = f"/users/{user_id}"
 
     # Realiza la solicitud DELETE a tu API local con el encabezado de autorización
     delete_response = requests.delete(URL + endpoint, headers=headers)

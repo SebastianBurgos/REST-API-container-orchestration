@@ -136,8 +136,8 @@ def get_user_by_id(user_id):
         return jsonify({"error": "Error al obtener el usuario"}), 500
 
 # Método DELETE para eliminar un usuario por su ID
-@app.route('/users', methods=['DELETE'])
-def delete_user_by_id():
+@app.route('/users/<int:user_id>', methods=['DELETE'])
+def delete_user_by_id(user_id):
     try:
         # Obtener el token del encabezado Authorization
         auth_header = request.headers.get('Authorization')
@@ -147,17 +147,23 @@ def delete_user_by_id():
 
         if not valido:
             return jsonify(payload), error_code
-
-        # Si el token es válido, puedes acceder a los datos del payload
-        user_id = payload['user_id']
         
         cursor = db.cursor(dictionary=True)
-        query_delete = "DELETE FROM Usuario WHERE id = %s"
-        cursor.execute(query_delete, (user_id,))
-        db.commit()
+        query = "SELECT * FROM Usuario WHERE id = %s"
+        cursor.execute(query, (user_id,))
+        user = cursor.fetchone()
         cursor.close()
 
-        return jsonify({"message": "Usuario eliminado exitosamente"}), 200
+        if user:
+            cursor = db.cursor(dictionary=True)
+            query_delete = "DELETE FROM Usuario WHERE id = %s"
+            cursor.execute(query_delete, (user_id))
+            db.commit()
+            cursor.close()
+
+            return jsonify({"message": "Usuario eliminado exitosamente"}), 200
+        else:
+            return jsonify({"error": "Usuario no encontrado"}), 404
     
     except mysql.connector.Error as err:
         print("Error:", err)
@@ -168,8 +174,8 @@ def delete_user_by_id():
         return jsonify({"error": "Token inválido"}), 401
 
 # Método PUT para actualizar un usuario por su ID
-@app.route('/users', methods=['PUT'])
-def update_user_by_id():
+@app.route('/users/<int:user_id>', methods=['PUT'])
+def update_user_by_id(user_id):
     try:
         # Obtener el token del encabezado Authorization
         auth_header = request.headers.get('Authorization')
@@ -179,10 +185,6 @@ def update_user_by_id():
 
         if not valido:
             return jsonify(payload), error_code
-
-        # Si el token es válido, puedes acceder a los datos del payload
-        user_id = payload['user_id']
-
     
         data = request.get_json()
         nombre = data.get('nombre')
@@ -230,7 +232,7 @@ def update_user_by_id():
     
 
 # Método POST para el login de usuario
-@app.route('/tokens', methods=['POST'])
+@app.route('/auth', methods=['POST'])
 def login_user():
     try:
         data = request.get_json()
@@ -255,7 +257,7 @@ def login_user():
 
             mensaje = "UN USUARIO SE HA AUTENTICADO."
             metodo = "POST."
-            ruta = "/tokens."
+            ruta = "/auth."
             ip = str(request.remote_addr)
             fecha = str(datetime.now())
             tipo_log = "AUTH"
@@ -278,8 +280,8 @@ def login_user():
 #  Para probar este método, debes incluir el token JWT en el encabezado Authorization
 #  de la solicitud con el formato "Bearer token".
 #  Además, envía un JSON en el cuerpo de la solicitud con la nueva clave
-@app.route('/users/user/new-password', methods=['PATCH'])
-def change_password():
+@app.route('/users/<int:user_id>/new-password', methods=['PATCH'])
+def change_password(user_id):
     try:
         # Obtener el token del encabezado Authorization
         auth_header = request.headers.get('Authorization')
@@ -289,9 +291,6 @@ def change_password():
 
         if not valido:
             return jsonify(payload), error_code
-
-        # Si el token es válido, puedes acceder a los datos del payload
-        user_id = payload['user_id']
 
         data = request.get_json()
         nueva_clave = data.get('nueva_clave')
@@ -314,7 +313,7 @@ def change_password():
         return jsonify({"error": "Error al actualizar la clave"}), 500
 
 # Método POST para recuperar la clave de un usuario
-@app.route('/tokens/token-password', methods=['POST'])
+@app.route('/auth/password-reset', methods=['POST'])
 def forgot_password():
     try:
         data = request.get_json()
