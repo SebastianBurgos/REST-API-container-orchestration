@@ -1,0 +1,24 @@
+{
+    "type":"object",
+    "properties":{
+        "id":{
+            "type":"integer"
+        },
+        "nombre": {
+            "type": "string",
+            "maxLength": 100,
+            "pattern": "^[A-Za-z0-9]{3,10}$"
+        },
+        "apellido": {
+            "type": "string",
+            "maxLength": 100,
+            "pattern": "^[A-Za-z0-9]{3,10}$"
+        },
+        "email": {
+            "type": "string",
+            "maxLength": 100,
+            "pattern": "^[A-Za-z0-9]{3,10}$"
+        }
+    }
+    
+}

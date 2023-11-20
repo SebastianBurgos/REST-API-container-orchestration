@@ -1,0 +1,38 @@
+{
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "url_pagina": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "apodo": {
+        "type": "string",
+        "maxLength": 100,
+        "pattern": "^[A-Za-z0-9]{3,10}$"
+      },
+      "informacion_publica": {
+        "type": "integer"
+      },
+      "direccion_correspondencia": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "biografia": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "organizacion": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "pais": {
+        "type": "string",
+        "maxLength": 100
+      }
+    },
+    "additionalProperties": false
+  }
+  

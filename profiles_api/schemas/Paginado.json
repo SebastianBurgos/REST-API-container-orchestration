@@ -1,0 +1,32 @@
+{
+    "type": "object",
+    "properties": {
+        "page": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000,
+            "format": "int32"
+        },
+        "per_page": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000,
+            "format": "int32"
+        },
+        "search_name": {
+            "type": "string",
+            "maxLength": 1000,
+            "pattern": "^[A-Za-z0-9ÁÉÍÓÚáéíóúÜüÑñ\\s]{3,10}$"
+        },
+        "users": {
+            "type": "object",
+            "properties": {
+                "schema": {
+                    "$ref": "./Full-Profiles.json"
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}
