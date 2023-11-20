@@ -1,7 +1,10 @@
 from flask import Flask
+from flask_cors import CORS
+
 import multiprocessing
 
 app = Flask(__name__)
+CORS(app)
 
 def start_api():
     app.run(host='0.0.0.0', port=5005)

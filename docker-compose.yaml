@@ -106,6 +106,7 @@ services:
       RABBITMQ_SERVICE: rabbitmq
       SERVICE_NAME: gateway_api
       USERS_API_URL: "http://users_api:5000"
+      PROFILES_API_URL: "http://profiles_api:4000"
     restart: always
     networks:
       - system_network

@@ -1,7 +1,11 @@
 import express from "express";
+import cors from 'cors';
 import router from "./routes/routes.js";
 import { consumeMessages } from "./controllers/automatizedProfileEvent.js";
 const app = express();
+
+// Habilitar CORS para todas las rutas
+app.use(cors());
 
 // Definir el puerto
 const PORT = 4000;

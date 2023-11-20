@@ -121,12 +121,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/CodigoHTTP' 
 
-
-
-  
-  /profiles/{Profiles_id}:
+  /profiles/{profile_id}:
     get:
       summary: get profiles by ID
+      security:
+        - BearerAuth: []
       parameters:
         - name: Profiles_id
           in: path
@@ -213,7 +212,54 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CodigoHTTP'
-        
+    delete:
+      summary: Eliminar un perfil por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del perfil a eliminar
+          schema:
+            type: integer
+            minimum: 0
+            format: int32
+      responses:
+        '200':
+          description: Profile update successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '500':
+          description: Error al actualizar el usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '401':
+          description: Credenciales invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
 security:
   - bearerAuth: []
 

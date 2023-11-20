@@ -86,7 +86,7 @@ def test_update_profile():
     # Datos para la actualización del perfil
     payload = {
         "apodo": "NuevoApodo",
-        "informacion_publica": "Nueva información",
+        "informacion_publica": 0,
     }
 
     # Hacer la solicitud PUT al endpoint de actualización de perfil
