@@ -96,6 +96,3 @@ def test_Obtener_lista_logs_name():
     # Verificar la respuesta sea exitosa
     data = response.json()
     assert "logs" in data
-
-
-    

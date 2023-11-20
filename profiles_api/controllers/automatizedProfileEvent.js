@@ -54,7 +54,6 @@ async function procesarMensaje(msg) {
             console.error('Error al crear el perfil en la base de datos');
         }
 
-        await db.end();
     } catch (error) {
         console.error('Error al procesar el mensaje:', error);
     }

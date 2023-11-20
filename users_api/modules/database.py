@@ -1,7 +1,7 @@
 import time
 import mysql.connector
 import os
-from modules.fakerservice import insert_fake_data
+#from modules.fakerservice import insert_fake_data
 
 # Configuración de la base de datos
 def esperar_db():
@@ -15,7 +15,7 @@ def esperar_db():
             )
 
             # Generamos datos falsos para la base de datos
-            insert_fake_data(db)
+            #insert_fake_data(db)
 
             return db
         except mysql.connector.Error as err:
