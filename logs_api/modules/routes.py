@@ -85,22 +85,17 @@ def get_app_logs(application):
         end = start + per_page
         paginated_logs = logs_by_application[start:end]
 
-        size = len(paginated_logs)
-
-        if size > 0:
-            return jsonify({"error": "La aplicación no tiene ningún log"}), 404
-        else:
-            # Retornar la lista de logs en formato JSON junto con información de paginación
-            response = {
-                "page": page,
-                "per_page": per_page,
-                "initial_date": initial_date,
-                "final_date": final_date,
-                "log_type": log_type,
-                "logs": paginated_logs,
-            }
-            
-            return jsonify(response), 200
+        # Retornar la lista de logs en formato JSON junto con información de paginación
+        response = {
+            "page": page,
+            "per_page": per_page,
+            "initial_date": initial_date,
+            "final_date": final_date,
+            "log_type": log_type,
+            "logs": paginated_logs,
+        }
+        
+        return jsonify(response), 200
 
     except Exception as err:
         print("Exception:", str(err))

@@ -192,7 +192,7 @@ def test_actualizar_datos_usuario():
     clave = "contrasena123"  # Ajusta la contraseña según tus necesidades
 
     # Define el token JWT previamente autenticado
-    token = obtener_token_jwt(email, clave)
+    token = autenticacion_token(email, clave)
 
     # Define los datos que el usuario desea actualizar
     nuevos_datos = {
@@ -336,7 +336,7 @@ def test_cambiar_contraseña_exitosamente():
     }
 
     # Define un ID de usuario existente en tu base de datos
-    user_id = 6
+    user_id = data_sesion['id_user']
 
     # Define el endpoint para cambiar la contraseña
     endpoint_cambio_contraseña = f"/users/{user_id}/new-password"
@@ -361,7 +361,7 @@ def test_cambiar_contraseña_sin_autenticación():
     }
 
     # Define un ID de usuario existente en tu base de datos
-    user_id = 6
+    user_id = 5
 
     # Define el endpoint para cambiar la contraseña (sin autorización)
     endpoint_cambio_contraseña = f"/users/{user_id}/new-password"
@@ -410,7 +410,7 @@ def test_eliminar_cuenta_usuario():
         "email": email,
         "clave": clave
     }
-    auth_response = requests.post(URL + "/tokens", json=auth_payload)
+    auth_response = requests.post(URL + "/auth", json=auth_payload)
 
     # Verifica que la autenticación sea exitosa y obtén el token
     assert auth_response.status_code == 200
@@ -423,7 +423,7 @@ def test_eliminar_cuenta_usuario():
         "Authorization": f"Bearer {token}"
     }
 
-    user_id = 6  # Ajusta el ID según tus necesidades
+    user_id = auth_data['id_user']  # Ajusta el ID según tus necesidades
 
     # Define el endpoint para eliminar la cuenta del usuario autenticado
     endpoint = f"/users/{user_id}"

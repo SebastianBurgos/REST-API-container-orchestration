@@ -80,6 +80,7 @@ services:
     depends_on:
       - profiles_db_mysql
       - users_api
+      - rabbitmq
     environment:
       MYSQL_SERVICE: profiles_db_mysql
       MYSQL_USER: root

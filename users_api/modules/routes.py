@@ -113,8 +113,8 @@ def register_user():
         return jsonify({"message": "Usuario registrado exitosamente"}), 201
 
     except mysql.connector.Error as err:
-        print("Error:", err)
-        return jsonify({"error": "Error al registrar usuario"}), 500
+        print("Error:", str(err))
+        return jsonify({"error": "Error al registrar usuario, razon: "+str(err)}), 500
     
 # Método GET para obtener un usuario por su ID
 @app.route('/users/<int:user_id>', methods=['GET'])
@@ -133,7 +133,7 @@ def get_user_by_id(user_id):
 
     except mysql.connector.Error as err:
         print("Error:", err)
-        return jsonify({"error": "Error al obtener el usuario"}), 500
+        return jsonify({"error": str(err)}), 500
 
 # Método DELETE para eliminar un usuario por su ID
 @app.route('/users/<int:user_id>', methods=['DELETE'])
@@ -157,7 +157,7 @@ def delete_user_by_id(user_id):
         if user:
             cursor = db.cursor(dictionary=True)
             query_delete = "DELETE FROM Usuario WHERE id = %s"
-            cursor.execute(query_delete, (user_id))
+            cursor.execute(query_delete, (user_id,))
             db.commit()
             cursor.close()
 
@@ -166,8 +166,8 @@ def delete_user_by_id(user_id):
             return jsonify({"error": "Usuario no encontrado"}), 404
     
     except mysql.connector.Error as err:
-        print("Error:", err)
-        return jsonify({"error": "Error al eliminar el usuario"}), 500
+        print("Error al eliminar el usuario:", err)
+        return jsonify({"error": str(err)}), 500
     except jwt.ExpiredSignatureError:
         return jsonify({"error": "Token expirado"}), 401
     except (jwt.DecodeError, jwt.InvalidTokenError):
@@ -224,7 +224,7 @@ def update_user_by_id(user_id):
         return jsonify({"message": "Usuario actualizado exitosamente"}), 200
     except mysql.connector.Error as err:
         print("Error:", err)
-        return jsonify({"error": "Error al actualizar el usuario"}), 500
+        return jsonify({"error": str(err)}), 500
     except jwt.ExpiredSignatureError:
         return jsonify({"error": "Token expirado"}), 401
     except (jwt.DecodeError, jwt.InvalidTokenError):

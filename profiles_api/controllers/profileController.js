@@ -211,6 +211,47 @@ export const updateProfile = async (req, res) => {
     }
 }
 
+// Eliminar el perfil de un usuario por ID
+export const deleteProfile = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const [results] = await db.execute('DELETE FROM Perfil WHERE id = ?', [id]);
+
+        if (results.affectedRows > 0) {
+            const tipo_log = "PROFILE";
+            const metodo = "DELETE";
+            const ruta = `/profiles/${id}`;
+            const modulo = "PROFILECONTROLLER.JS";
+            const application = "PROFILES_API_REST";
+            const usuario_autenticado = `USUARIO CON ID: ${id}`;
+            const token = "NO TOKEN";
+            const mensaje = "PERFIL ELIMINADO.";
+            const fecha = obtenerFechaActual();
+
+            const ip = obtenerIPv4(req); // Obtiene la dirección IP del cliente
+
+            await enviarMensaje(tipo_log, metodo, ruta, modulo, application, fecha, ip, usuario_autenticado, token, mensaje);
+
+            return res.status(200).json({
+                mensaje: "Perfil eliminado exitosamente",
+                detalles: "Filas afectadas: " + results.affectedRows
+            });
+        } else {
+            return res.status(404).json({
+                mensaje: "Perfil no encontrado",
+                detalles: "El perfil con el ID proporcionado no existe en la base de datos"
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            error: 'Ha ocurrido un error al eliminar el perfil',
+            detalles: error.message
+        });
+    }
+}
+
+
 function obtenerFechaActual(){
     const fechaActual = new Date();
 
