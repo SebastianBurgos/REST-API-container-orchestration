@@ -7,6 +7,9 @@ WORKDIR /app
 # Copia todo el directorio actual
 COPY . .
 
+# Instala curl para poder hacer peticiones a la API
+RUN apk update && apk add curl
+
 # Instala las dependencias
 RUN pip install -r requirements.txt
 

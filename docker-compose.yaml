@@ -7,11 +7,21 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: user_password
     volumes:
-      - ./users_api/init.sql:/docker-entrypoint-initdb.d/init.sql 
+      - ./users_api/init.sql:/docker-entrypoint-initdb.d/init.sql
     restart: always
     networks:
       - system_network
-  
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "sh",
+          "-c",
+          "mysqladmin ping -h localhost -u root -p$MYSQL_ROOT_PASSWORD",
+        ]
+      interval: 10s
+      retries: 3
+
   profiles_db_mysql:
     image: mysql:5.7
     environment:
@@ -24,15 +34,31 @@ services:
     restart: always
     networks:
       - system_network
-  
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "sh",
+          "-c",
+          "mysqladmin ping -h localhost -u root -p$MYSQL_ROOT_PASSWORD",
+        ]
+      interval: 10s
+      retries: 3
+
   rabbitmq:
     image: rabbitmq:3.8
     ports:
       - "5672:5672"
+      - "15672:15672"
     restart: always
     networks:
       - system_network
-  
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
   logs_api:
     build:
       context: ./logs_api
@@ -49,6 +75,11 @@ services:
       - system_network
     restart: always
     tty: true
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:5005/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   users_api:
     build:
@@ -71,7 +102,12 @@ services:
     restart: always
     networks:
       - system_network
-  
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:5000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   profiles_api:
     build:
       context: ./profiles_api
@@ -94,6 +130,12 @@ services:
     restart: always
     networks:
       - system_network
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:4000/health"]
+      interval: 10s
+      start_period: 10s
+      timeout: 5s
+      retries: 6
 
   gateway_api:
     build:
@@ -110,6 +152,11 @@ services:
     restart: always
     networks:
       - system_network
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 networks:
   system_network:

@@ -13,11 +13,18 @@ if ! command -v pip &>/dev/null; then
     sudo apt-get install -y python3-pip
 fi
 
-# Verifica si pytest está instalado
-if ! command -v pytest &>/dev/null; then
-    echo "pytest no está instalado. Instalando..."
-    sudo -H pip install -U pytest
-fi
+# Instalamos venv
+sudo apt-get install -y python3.11-venv
+
+# Creamos el entorno virtual
+python3 -m venv venv
+
+# Activamos el entorno virtual
+source venv/bin/activate
+
+# Instalamos los paquetes necesarios
+pip install -U pytest
+pip install -U requests
 
 # Lista de carpetas donde se encuentran los archivos .py
 carpetas=("testUsers" "testLogs" "testProfiles" "testGateway")
@@ -26,8 +33,16 @@ carpetas=("testUsers" "testLogs" "testProfiles" "testGateway")
 for carpeta in "${carpetas[@]}"; do
     if [ -d "$carpeta" ]; then
         echo "Ejecutando pruebas en $carpeta..."
-        pytest "$carpeta"
+        cd $carpeta
+        pytest -v -s test.py
+        cd ..
     else
         echo "La carpeta $carpeta no existe."
     fi
 done
+
+# Desactivamos el entorno virtual
+deactivate
+
+# Eliminamos el entorno virtual
+rm -rf venv

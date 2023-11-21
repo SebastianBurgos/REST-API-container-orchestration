@@ -122,6 +122,7 @@ func main() {
 	r.HandleFunc("/register", registerHandler)
 	r.HandleFunc("/auth-profiles", getProfileHandler)
 	r.HandleFunc("/update-profile", updateProfileHandler)
+	r.HandleFunc("/health", healthHandler)
 
 	// Aplicar middleware CORS global a todas las rutas
 	http.Handle("/", enableCors(r))
@@ -709,4 +710,8 @@ func updateProfileHandler(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, "Error al enviar la respuesta al cliente", http.StatusInternalServerError)
 		return
 	}
+}
+
+func healthHandler(w http.ResponseWriter, req *http.Request) {
+	fmt.Fprintf(w, "OK")
 }
