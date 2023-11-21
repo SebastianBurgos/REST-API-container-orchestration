@@ -116,6 +116,18 @@ paths:
       responses:
         '200':
           description: La API está en funcionamiento
+        '503':
+          description: La API no está disponible
+          content:
+            application/json:
+              example:
+                status: "Service Unavailable"
+        default:
+          description: Respuesta por defecto
+          content:
+            application/json:
+              example:
+                status: "Unknown"
 security:
   - bearerAuth: []
 

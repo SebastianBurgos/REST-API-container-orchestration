@@ -1,0 +1,6 @@
+{
+    "type": "string",
+    "maxLength": 1000,
+    "pattern": "^[A-Za-z0-9ÁÉÍÓÚáéíóúÜüÑñ\\s]{3,10}$",
+    "additionalProperties": false
+}

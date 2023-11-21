@@ -1,0 +1,49 @@
+{
+    "type": "object",
+    "properties": {
+      "auth_data": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "clave": {
+            "type": "string"
+          }
+        },
+        "required": ["email", "clave"]
+      },
+      "profile_data": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "url_pagina": {
+            "type": "string"
+          },
+          "apodo": {
+            "type": "string"
+          },
+          "informacion_publica": {
+            "type": "integer"
+          },
+          "direccion_correspondencia": {
+            "type": "string"
+          },
+          "biografia": {
+            "type": "string"
+          },
+          "organizacion": {
+            "type": "string"
+          },
+          "pais": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "url_pagina", "apodo", "informacion_publica", "direccion_correspondencia", "biografia", "organizacion", "pais"]
+      }
+    },
+    "required": ["auth_data", "profile_data"]
+  }
+  

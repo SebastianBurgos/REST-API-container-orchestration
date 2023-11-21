@@ -1,0 +1,323 @@
+openapi: 3.0.0
+info:
+  title: APIGateway
+  description: API for Gateway
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Development server
+
+paths:
+  /auth:
+   post:
+      summary: User authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  maxLength: 100
+                  pattern: ^[A-Za-z0-9]{3,10}$
+                clave:
+                  type: string
+                  maxLength: 100
+                  pattern: ^[A-Za-z0-9]{3,10}$
+              additionalProperties: false
+      responses:
+        '200':
+          description: JWT token generated successfully
+          content:
+            application/json:
+              example:
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          description: Credenciales invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '406':
+          description: Not Acceptable (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '415':
+          description: Unsupported Media Type (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '429':
+          description: Too Many Requests (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '500':
+          description: Error en el proceso de login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+  /register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Full-User'
+      responses:
+        '201':
+          description: Usuario registrado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '401':
+          description: Credenciales invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '406':
+          description: Not Acceptable (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '412':
+          description: El campo nombre es requerido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '415':
+          description: Unsupported Media Type (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '429':
+          description: Too Many Requests (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '500':
+          description: Error al registrar usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP' 
+
+  /auth-profiles:
+    post:
+      summary: Profile authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  maxLength: 100
+                  pattern: ^[A-Za-z0-9]{3,10}$
+                clave:
+                  type: string
+                  maxLength: 100
+                  pattern: ^[A-Za-z0-9]{3,10}$
+              additionalProperties: false
+      responses:
+        '200':
+          description: JWT token generated successfully
+          content:
+            application/json:
+              example:
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+              schema:
+                $ref: '#/components/schemas/auth-profiles'
+        '401':
+          description: Credenciales invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '406':
+          description: Not Acceptable (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '415':
+          description: Unsupported Media Type (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '429':
+          description: Too Many Requests (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '500':
+          description: Error en el proceso de login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+
+  /update-profile:
+    post:
+      summary: Profile update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schemas/UpdateProfiles.json'
+      responses:
+        '200':
+          description: JWT token generated successfully
+          content:
+            application/json:
+              example:
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+              schema:
+                $ref: '#/components/schemas/auth-profiles'
+        '401':
+          description: Credenciales invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '406':
+          description: Not Acceptable (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '415':
+          description: Unsupported Media Type (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '429':
+          description: Too Many Requests (en-US)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        '500':
+          description: Error en el proceso de login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoHTTP'
+  /health:
+    get:
+      summary: Verificar el estado de la API
+      responses:
+        '200':
+          description: La API está en funcionamiento
+        '503':
+          description: La API no está disponible
+          content:
+            application/json:
+              example:
+                status: "Service Unavailable"
+        default:
+          description: Respuesta por defecto
+          content:
+            application/json:
+              example:
+                status: "Unknown"
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+      bearerAuth:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+  schemas:
+    Full-User:
+      $ref: './schemas/Full-User.json'
+    String:
+      $ref: './schemas/String.json'
+    CodigoHTTP:
+      $ref: './schemas/Codigo-HTTP.json'
+    Paginado:
+      $ref: './schemas/Paginado.json'
+    Token:
+      $ref: './schemas/Token.json'
+    auth-profiles:
+      $ref: './schemas/Auth-Profile.json'
+    updateProfiles:
+      $ref: './schemas/UpdateProfiles.json'
+
+
+
