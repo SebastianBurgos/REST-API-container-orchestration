@@ -8,5 +8,8 @@ router.get('/profiles/:id', getProfile)
 router.post('/profiles', createProfile)
 router.put('/profiles/:id', updateProfile)
 router.delete('/profiles/:id', deleteProfile)
+router.get('/health', (req, res) => {
+    res.status(200).send('Server is up and running...')
+})
 
 export default router

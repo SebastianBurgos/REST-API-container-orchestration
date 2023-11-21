@@ -10,6 +10,9 @@ COPY package.json ./
 # Limpiar caché de npm
 RUN npm cache clean --force
 
+# Instala curl para poder hacer peticiones a la API
+RUN apk update && apk add curl
+
 # Instala las dependencias
 RUN npm i
 

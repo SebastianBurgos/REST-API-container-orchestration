@@ -340,3 +340,7 @@ def forgot_password():
     except mysql.connector.Error as err:
         print("Error:", err)
         return jsonify({"error": "Error en el proceso de recuperación de clave"}), 500
+    
+@app.route('/health')
+def health_check():
+    return 'health check'

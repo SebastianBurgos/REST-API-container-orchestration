@@ -149,3 +149,7 @@ def register_log():
     except Exception as err:
         print("Error: ", err)
         return jsonify({"error": "Error al registrar el log"}), 500
+
+@app.route('/health')
+def health_check():
+    return 'health check'
