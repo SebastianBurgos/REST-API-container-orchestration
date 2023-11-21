@@ -260,6 +260,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CodigoHTTP'
+  /health:
+    get:
+      summary: Verificar el estado de la API
+      responses:
+        '200':
+          description: La API está en funcionamiento
 security:
   - bearerAuth: []
 
