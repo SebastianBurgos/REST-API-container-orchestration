@@ -20,7 +20,7 @@ if ! command -v pytest &>/dev/null; then
 fi
 
 # Lista de carpetas donde se encuentran los archivos .py
-carpetas=("testUsers" "testLogs" "testProfiles")
+carpetas=("testUsers" "testLogs" "testProfiles" "testGateway")
 
 # Ejecuta los archivos .py en las carpetas especificadas
 for carpeta in "${carpetas[@]}"; do
