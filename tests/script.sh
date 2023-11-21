@@ -14,7 +14,7 @@ if ! command -v pip &>/dev/null; then
 fi
 
 # Instalamos venv
-sudo apt-get install -y python3-venv
+sudo apt-get install -y python3.11-venv
 
 # Creamos el entorno virtual
 python3 -m venv venv
@@ -22,8 +22,9 @@ python3 -m venv venv
 # Activamos el entorno virtual
 source venv/bin/activate
 
-# Instalamos pytest
-pip install pytest
+# Instalamos los paquetes necesarios
+pip install -U pytest
+pip install -U requests
 
 # Lista de carpetas donde se encuentran los archivos .py
 carpetas=("testUsers" "testLogs" "testProfiles" "testGateway")
