@@ -33,7 +33,9 @@ carpetas=("testUsers" "testLogs" "testProfiles" "testGateway")
 for carpeta in "${carpetas[@]}"; do
     if [ -d "$carpeta" ]; then
         echo "Ejecutando pruebas en $carpeta..."
-        pytest "$carpeta"
+        cd $carpeta
+        pytest -v -s test.py
+        cd ..
     else
         echo "La carpeta $carpeta no existe."
     fi

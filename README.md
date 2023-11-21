@@ -45,7 +45,7 @@ docker compose up
 
 ## Running Tests
 
-To test this system (at Linux), make sure you are in the test directory containing the `script.sh` file. Then, execute the following command:
+To test this system (at Linux or Windows with Git Bash Terminal), make sure you are in the test directory containing the `script.sh` file. Then, execute the following command:
 
 ```bash
 ./script.sh
